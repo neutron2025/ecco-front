@@ -29,3 +29,20 @@ start
 PORT=2000 npm start
 
 ```
+
+
+### git 操作
+```
+ 1、添加远程仓库：
+    git remote add upstream <上游仓库地址>
+ 2、获取上游仓库的最新更改：
+    git fetch upstream
+ 3、将本地更改暂存和提交：
+    git add .
+    git commit -m "描述你的本地更改"
+ 4、进行合并（merge）或变基（rebase）操作
+    git merge upstream/main 或者   git rebase upstream/main
+ 5、将本地仓库的更改推送到远程仓库：
+    git push
+
+```
