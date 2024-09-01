@@ -204,7 +204,8 @@ return (
                 </tr>
             </thead>
             <tbody>
-                {products.map(product => (
+
+                {products && products.length > 0? products.map(product => (
                     <tr key={product.ID} className="h-16">
                         <td className="border px-4 py-2">
                             {product.images && product.images.length > 0 && (
@@ -234,7 +235,10 @@ return (
                             </button>
                         </td>
                     </tr>
-                ))}
+
+
+                )):<tr><td>没有数据可显示。</td></tr>}
+
             </tbody>
         </table>
         {/* <div className="pagination">

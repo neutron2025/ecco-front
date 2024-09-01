@@ -211,7 +211,8 @@ const handleColorChange = (sizeIndex, colorIndex, colorValue) => {
                     {/* Color inputs and "Remove Color" buttons */}
                     <div className="flex flex-wrap">
                         {sizeColor.colors.map((color, colorIndex) => (
-                        <div key={colorIndex} className="mr-2">
+
+                        <div key={colorIndex} className="relative mr-2">
                             <input
                             type="text"
                             placeholder="Color"
@@ -223,9 +224,12 @@ const handleColorChange = (sizeIndex, colorIndex, colorValue) => {
                             <button
                                 type="button"
                                 onClick={() => handleRemoveColor(index, colorIndex)}
-                                className="text-red-500"
+
+                                className="absolute top-0 right-0 text-red-500  bg-white rounded-full w-6 h-6 flex items-center justify-center"
+                          style={{ transform: 'translate(50%, -50%)' }}
                             >
-                                Remove Color
+                               &times;
+
                             </button>
                             )}
                         </div>

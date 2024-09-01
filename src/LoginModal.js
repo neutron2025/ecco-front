@@ -4,7 +4,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 
-const LoginModal = ({ onClose  , isLoggedIn, setIsLoggedIn }) => {
+
+const LoginModal = ({ onClose  , setIsLoggedIn }) => {
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isRegistering, setIsRegistering] = useState(false);
