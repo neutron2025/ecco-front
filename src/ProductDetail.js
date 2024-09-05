@@ -14,14 +14,14 @@ const ProductDetail = React.memo(()  => {
   const { isLoggedIn, setIsLoginModalOpen,isLoginModalOpen,handleLoginSuccess } = useContext(AuthContext); // 从 AuthContext 中获取状态
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
+  const [isAddToCartEnabled, setIsAddToCartEnabled] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
 
-
+//产品信息获取
   useEffect(() => {
     if (productId) {
-
       console.log('Fetching product detail for productId:', productId);
-
       fetch(`http://localhost:3000/product/${productId}`)
        .then(response => {
           if (!response.ok) {
@@ -29,7 +29,6 @@ const ProductDetail = React.memo(()  => {
           }
           return response.json();
         })
-
        .then(data => {
         setProductDetail(data)
         const mainImage = data.images.find(img => img.main_image);
@@ -37,10 +36,55 @@ const ProductDetail = React.memo(()  => {
             setCurrentImageUrl(`http://localhost:3000/${mainImage.url}`);
           }
       })
-
        .catch(error => console.error('Error fetching product detail:', error));
     }
   }, [productId]);
+
+//产品信息是否添加购物车
+  useEffect(() => {
+    setIsAddToCartEnabled(selectedSize !== '' && selectedColor !== '' && quantity > 0);
+  }, [selectedSize, selectedColor, quantity]);
+
+  const handleQuantityChange = (e) => {
+    const value = parseInt(e.target.value);
+    setQuantity(value > 0 ? value : 1);
+  };
+  const handleAddToCart = async () => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    try {
+      const response = await fetch('http://localhost:3000/cart/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
+        },
+        body: JSON.stringify({
+          products: [{
+            product_id: productId,
+            quantity: quantity,
+            size: selectedSize,
+            color: selectedColor
+          }]
+        })
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      if (data.message === "Product added to cart successfully") {
+        alert('商品已成功添加到购物车！');
+        // 可以在这里更新购物车图标或数量
+      }
+    } catch (error) {
+      console.error('添加到购物车失败:', error);
+      alert('添加到购物车失败，请稍后再试。');
+    }
+  };
+
+
 
   console.log(productDetail)
 
@@ -117,7 +161,7 @@ const {
                 />
               ))}
             </div>
-        </div>
+          </div>
 
           {/* Product Information */}
           <div className="product-info mt-4">
@@ -125,12 +169,6 @@ const {
             <p className="text-gray-700">{description}</p>
             <div className="product-price text-2xl font-semibold">￥{price}</div>
           </div>
-
-
-
-
-        
-        
         </div>
 
         <div className="size-color-selection w-1/3 mt-8">
@@ -164,11 +202,63 @@ const {
           </div>
         </div>
 
+        <div className="flex">
+        {/* ... 产品图片和信息 ... */}
+        <div className="size-color-selection w-1/3 mt-8">
+          <div className="size-selection mb-4">
+            <h3 className="text-lg font-bold">尺寸</h3>
+            <div className="flex mt-2">
+              {size_colors.map((sizeColor, index) => (
+                <button
+                  key={index}
+                  className={`mr-2 p-2 border ${selectedSize === sizeColor.size ? 'border-blue-500' : 'border-gray-300'}`}
+                  onClick={() => setSelectedSize(sizeColor.size)}
+                >
+                  {sizeColor.size}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="color-selection mb-4">
+            <h3 className="text-lg font-bold">颜色</h3>
+            <div className="flex mt-2">
+              {selectedSize && size_colors.find(sc => sc.size === selectedSize).colors.map((color, index) => (
+                <button
+                  key={index}
+                  className={`mr-2 p-2 border ${selectedColor === color ? 'border-blue-500' : 'border-gray-300'}`}
+                  onClick={() => setSelectedColor(color)}
+                >
+                  {color}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="quantity-selection mb-4">
+          <h3 className="text-lg font-bold">数量</h3>
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={handleQuantityChange}
+              className="mt-2 p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <button
+            className={`mt-4 px-4 py-2 rounded ${isAddToCartEnabled ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+            onClick={handleAddToCart}
+            disabled={!isAddToCartEnabled}
+          >
+            添加到购物车
+          </button>
+        </div>
+      </div>
+
       </div>
 
     </div>
 
   );
+
 
 });
 

@@ -21,6 +21,7 @@ import UserManagement from './UserManagement';
 import ProductManagement from './ProductManagement';
 import AddProduct from './AddProduct'; // 导入添加产品页面组件
 import EditProduct from './EditProduct';
+import CheckOut from './CheckOut';
 
 import { AuthProvider } from './AuthContext'; // 导入 AuthProvider
 
@@ -33,10 +34,11 @@ root.render(
      <AuthProvider>
       <div>
         <Routes>
-          <Route exact path="/" element={<App />} />
+          <Route exact path="/*" element={<App />} />
 
           <Route path="/product/:productId" element={<ProductDetail />} />
           <Route path="/userinfo" element={<UserInfo />} />
+          <Route path="/checkout" element={<CheckOut />} />
           <Route path="/admin-x-page" element={<AdminPage />} />
           <Route path="/admin/management" element={<AdminProductManagement />} />
           <Route path="/admin/user-management" element={<UserManagement />} />
