@@ -203,7 +203,7 @@ const handleColorChange = (sizeIndex, colorIndex, colorValue) => {
                     {/* Size input field */}
                     <input
                         type="text"
-                        placeholder="Size"
+                        placeholder="Color"
                         value={sizeColor.size}
                         onChange={(e) => handleSizeColorChange(index, 'size', e.target.value)}
                         className="border p-2 rounded mr-2 flex-grow w-16"
@@ -215,7 +215,7 @@ const handleColorChange = (sizeIndex, colorIndex, colorValue) => {
                         <div key={colorIndex} className="relative mr-2">
                             <input
                             type="text"
-                            placeholder="Color"
+                            placeholder="Size"
                             value={color}
                             onChange={(e) => handleColorChange(index, colorIndex, e.target.value)}
                             className="border p-2 rounded w-32"

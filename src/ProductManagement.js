@@ -148,7 +148,6 @@ const ProductManagement = () => {
 
     //  // 阻止默认的表单提交行为，如果搜索是在表单中
     event?.preventDefault();
-
     // 更新产品列表状态以显示搜索结果
     setProducts(filteredProducts);
 

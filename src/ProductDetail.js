@@ -171,7 +171,7 @@ const {
           </div>
         </div>
 
-        <div className="size-color-selection w-1/3 mt-8">
+        {/* <div className="size-color-selection w-1/3 mt-8">
           <div className="size-selection mb-4">
             <h3 className="text-lg font-bold">Size</h3>
             <div className="flex mt-2">
@@ -200,19 +200,19 @@ const {
               ))}
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="flex">
         {/* ... 产品图片和信息 ... */}
         <div className="size-color-selection w-1/3 mt-8">
           <div className="size-selection mb-4">
-            <h3 className="text-lg font-bold">尺寸</h3>
+            <h3 className="text-lg font-bold">颜色</h3>
             <div className="flex mt-2">
               {size_colors.map((sizeColor, index) => (
                 <button
                   key={index}
                   className={`mr-2 p-2 border ${selectedSize === sizeColor.size ? 'border-blue-500' : 'border-gray-300'}`}
-                  onClick={() => setSelectedSize(sizeColor.size)}
+                  onClick={() => handleSizeClick(sizeColor.size)}
                 >
                   {sizeColor.size}
                 </button>
@@ -220,13 +220,13 @@ const {
             </div>
           </div>
           <div className="color-selection mb-4">
-            <h3 className="text-lg font-bold">颜色</h3>
+            <h3 className="text-lg font-bold">尺寸</h3>
             <div className="flex mt-2">
               {selectedSize && size_colors.find(sc => sc.size === selectedSize).colors.map((color, index) => (
                 <button
                   key={index}
                   className={`mr-2 p-2 border ${selectedColor === color ? 'border-blue-500' : 'border-gray-300'}`}
-                  onClick={() => setSelectedColor(color)}
+                  onClick={() => handleColorClick(color)}
                 >
                   {color}
                 </button>

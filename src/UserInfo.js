@@ -151,6 +151,10 @@ const handleDeleteCartItem = async (productRef, size, color) => {
   navigate('/checkout');
 };
 
+const handleGoBack = () => {
+  navigate(-1); // 返回上一页
+};
+
 if (isLoading) {
   return <div>加载中...</div>;
 }
@@ -171,7 +175,24 @@ if (!isLoggedIn) {
       <div>
         {isLoggedIn? (
           <>
-            <Header isLoggedIn={isLoggedIn} setIsLoginModalOpen={() => {}} />
+            <Header isLoggedIn={isLoggedIn} setIsLoginModalOpen={() => {}}  />
+               {/* 添加返回按钮 */}
+               <button 
+                        onClick={handleGoBack}
+                        className="back-button"
+                        style={{
+                            position: 'absolute',
+                            top: '10px',
+                            left: '10px',
+                            padding: '5px 10px',
+                            backgroundColor: '#f0f0f0',
+                            border: 'none',
+                            borderRadius: '5px',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        返回
+                    </button>
 
             <h2>用户信息</h2>
             <p>ID: {userData.id}</p>

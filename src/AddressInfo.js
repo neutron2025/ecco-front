@@ -1,3 +1,4 @@
+import { data } from 'autoprefixer';
 import React, { useState, useEffect } from 'react';
 
 const AddressInfo = ({ onAddressSelect }) => {
@@ -31,7 +32,12 @@ const AddressInfo = ({ onAddressSelect }) => {
                     Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
                 }
             });
-            if (!response.ok) {
+            if (response.status === 404) {
+                console.log(response.message);
+                setAddresses([]);
+                setError(response.message);
+            }
+            else if (!response.ok) {
                 throw new Error('获取地址失败');
             }
             const data = await response.json();
@@ -44,9 +50,7 @@ const AddressInfo = ({ onAddressSelect }) => {
                     onAddressSelect(defaultAddress.ID);
                 }
             } else {
-                console.error('Unexpected data format:', data);
                 setAddresses([]);
-                setError('获取地址数据格式不正确');
             }
         } catch (error) {
             console.error('获取地址失败:', error);
