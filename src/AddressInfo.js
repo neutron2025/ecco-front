@@ -26,7 +26,7 @@ const AddressInfo = ({ onAddressSelect }) => {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await fetch('http://127.0.0.1:3000/address',{
+            const response = await fetch('http://127.0.0.1:3000/api/address',{
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
@@ -73,8 +73,8 @@ const AddressInfo = ({ onAddressSelect }) => {
     const handleSaveAddress = async () => {
         try {
             const url = editingAddressId
-                ? `http://localhost:3000/address/${editingAddressId}`
-                : 'http://localhost:3000/address';
+                ? `http://localhost:3000/api/address/${editingAddressId}`
+                : 'http://localhost:3000/api/address';
             
             const method = editingAddressId ? 'PUT' : 'POST';
 
@@ -110,7 +110,7 @@ const AddressInfo = ({ onAddressSelect }) => {
 
     const handleDeleteAddress = async (addressId) => {
         try {
-            const response = await fetch(`http://127.0.0.1:3000/address/${addressId}`, {
+            const response = await fetch(`http://127.0.0.1:3000/api/address/${addressId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

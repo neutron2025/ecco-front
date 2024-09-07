@@ -22,7 +22,7 @@ const ProductDetail = React.memo(()  => {
   useEffect(() => {
     if (productId) {
       console.log('Fetching product detail for productId:', productId);
-      fetch(`http://localhost:3000/product/${productId}`)
+      fetch(`http://localhost:3000/api/product/${productId}`)
        .then(response => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -55,7 +55,7 @@ const ProductDetail = React.memo(()  => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:3000/cart/', {
+      const response = await fetch('http://localhost:3000/api/cart/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -14,7 +14,7 @@ const App = () => {
 
 
   useEffect(() => {
-    fetch('http://localhost:3000')
+    fetch('http://localhost:3000/api')
      .then(response => response.json())
      .then(data => {
         const filteredProducts = data.products.map(product => {

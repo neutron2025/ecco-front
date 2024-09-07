@@ -61,7 +61,7 @@ const AddProduct = () => {
  
       const adminToken = localStorage.getItem('adminToken');
       try {
-        const response = await fetch('http://localhost:3000/admin/addproduct', {
+        const response = await fetch('http://localhost:3000/api/admin/addproduct', {
           method: 'POST',
           body: formData,
           headers: {

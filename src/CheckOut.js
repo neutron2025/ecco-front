@@ -26,7 +26,7 @@ const Checkout = () => {
         }
 
         try {
-            const response = await fetch('http://127.0.0.1:3000/cart/', {
+            const response = await fetch('http://127.0.0.1:3000/api/cart/', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`

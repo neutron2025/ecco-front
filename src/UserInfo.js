@@ -70,7 +70,7 @@ const UserInfo = () => {
 
     const fetchUserData = async (token) => {
       try {
-          const response = await fetch('http://127.0.0.1:3000/userinfo', {
+          const response = await fetch('http://127.0.0.1:3000/api/userinfo', {
               headers: {
                   Authorization: `Bearer ${token}`
               }
@@ -100,7 +100,7 @@ const UserInfo = () => {
     }
 
     try {
-        const response = await fetch('http://127.0.0.1:3000/cart/', {
+        const response = await fetch('http://127.0.0.1:3000/api/cart/', {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`
@@ -118,7 +118,7 @@ const UserInfo = () => {
 
 const handleDeleteCartItem = async (productRef, size, color) => {
   try {
-      const response = await fetch('http://127.0.0.1:3000/cart/', {
+      const response = await fetch('http://127.0.0.1:3000/api/cart/', {
           method: 'Delete',
           headers: {
               'Content-Type': 'application/json',
