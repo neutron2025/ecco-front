@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import { useNavigate,useParams   } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const EditProduct = () => {
 
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ const EditProduct = () => {
         const fetchProduct = async () => {
           try {
             const token = localStorage.getItem('adminToken');
-            const response = await fetch(`http://localhost:3000/api/admin/product/${id}`,{    //   http://127.0.0.1:3000/admin/product/66cc0a0987f0bb7010ace40e
+            const response = await fetch(`${apiUrl}/api/admin/product/${id}`,{    //   http://127.0.0.1:3000/admin/product/66cc0a0987f0bb7010ace40e
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -108,7 +108,7 @@ const EditProduct = () => {
  
       const adminToken = localStorage.getItem('adminToken');
       try {
-        const response = await fetch('http://localhost:3000/api/admin/addproduct', {
+        const response = await fetch(`${apiUrl}/api/admin/addproduct`, {
           method: 'POST',
           body: formData,
           headers: {

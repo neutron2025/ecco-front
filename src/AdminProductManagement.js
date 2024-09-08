@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const AdminProductManagement = () => {
   const navigate = useNavigate();
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);

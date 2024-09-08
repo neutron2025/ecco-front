@@ -46,3 +46,9 @@ PORT=2000 npm start
     git push
 
 ```
+### 编译成静态文件，部署给nginx 
+```
+
+npm run build:prod   
+然后 将build中的前端文件配置到nginx 路径，详见后端readme
+```

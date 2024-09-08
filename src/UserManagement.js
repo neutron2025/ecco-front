@@ -1,6 +1,6 @@
 import React,{useEffect,useState,useCallback} from 'react';
 import { useNavigate } from 'react-router-dom';
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const UserManagement = () => {
     const [users,setUsers] = useState([])
     const [currentPage,setCurrentPage] = useState(1)
@@ -32,7 +32,7 @@ const UserManagement = () => {
         const checkAdminStatus = async () => {
           try {
             const storedToken = localStorage.getItem('adminToken');
-            const response = await fetch('http://127.0.0.1:3000/api/admininfo', {
+            const response = await fetch(`${apiUrl}/api/admininfo`, {
               headers: {
                 Authorization: `Bearer ${storedToken}`,
               },
@@ -58,7 +58,7 @@ const UserManagement = () => {
         const token = localStorage.getItem('adminToken');
         try {
           const response = await fetch(
-            `http://127.0.0.1:3000/api/admin/users?page=${currentPage}&limit=${usersPerPage}`,
+            `${apiUrl}/api/admin/users?page=${currentPage}&limit=${usersPerPage}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -86,7 +86,7 @@ const UserManagement = () => {
     const token = localStorage.getItem('adminToken');
     if (isConfirmed) {
       try {
-        const response = await fetch(`http://127.0.0.1:3000/api/admin/users/${userId}`, {
+        const response = await fetch(`${apiUrl}/api/admin/users/${userId}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -114,7 +114,7 @@ const UserManagement = () => {
     const token = localStorage.getItem('adminToken');
     if (searchValue) {
       try {
-        const response = await fetch(`http://127.0.0.1:3000/api/admin/user/${searchValue}`,{
+        const response = await fetch(`${apiUrl}/api/admin/user/${searchValue}`,{
             method: 'GET',
             headers: {
               Authorization: `Bearer ${token}`,

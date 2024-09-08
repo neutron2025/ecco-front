@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-const AddProduct = () => {
+const AddProduct = ({apiUrl}) => {
 
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
@@ -61,7 +61,7 @@ const AddProduct = () => {
  
       const adminToken = localStorage.getItem('adminToken');
       try {
-        const response = await fetch('http://localhost:3000/api/admin/addproduct', {
+        const response = await fetch(`${apiUrl}/api/admin/addproduct`, {
           method: 'POST',
           body: formData,
           headers: {

@@ -26,6 +26,12 @@ import CheckOut from './CheckOut';
 import { AuthProvider } from './AuthContext'; // 导入 AuthProvider
 
 
+
+
+
+const apiUrl = process.env.REACT_APP_API_URL;
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -34,17 +40,17 @@ root.render(
      <AuthProvider>
       <div>
         <Routes>
-          <Route exact path="/*" element={<App />} />
+          <Route exact path="/*" element={<App apiUrl={apiUrl}/>} />
 
-          <Route path="/product/:productId" element={<ProductDetail />} />
-          <Route path="/userinfo" element={<UserInfo />} />
-          <Route path="/checkout" element={<CheckOut />} />
-          <Route path="/admin-x-page" element={<AdminPage />} />
-          <Route path="/admin/management" element={<AdminProductManagement />} />
-          <Route path="/admin/user-management" element={<UserManagement />} />
-          <Route path="/admin/product-management" element={<ProductManagement />} />
-          <Route path="/admin/add-product" element={<AddProduct />} /> // 添加产品路由
-          <Route path="/admin/edit-product/:id" element={<EditProduct />} />
+          <Route path="/product/:productId" element={<ProductDetail apiUrl={apiUrl}/>} />
+          <Route path="/userinfo" element={<UserInfo apiUrl={apiUrl}/>} />
+          <Route path="/checkout" element={<CheckOut apiUrl={apiUrl}/>} />
+          <Route path="/admin-x-page" element={<AdminPage apiUrl={apiUrl}/>} />
+          <Route path="/admin/management" element={<AdminProductManagement apiUrl={apiUrl}/>} />
+          <Route path="/admin/user-management" element={<UserManagement apiUrl={apiUrl}/>} />
+          <Route path="/admin/product-management" element={<ProductManagement apiUrl={apiUrl}/>} />
+          <Route path="/admin/add-product" element={<AddProduct apiUrl={apiUrl}/>} /> // 添加产品路由
+          <Route path="/admin/edit-product/:id" element={<EditProduct apiUrl={apiUrl}/>} />
         </Routes>
       </div>
 

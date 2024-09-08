@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 import AddressInfo from './AddressInfo';
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const Checkout = () => {
     const [cartItems, setCartItems] = useState([]);
     const { isLoggedIn } = useContext(AuthContext);
@@ -26,7 +26,7 @@ const Checkout = () => {
         }
 
         try {
-            const response = await fetch('http://127.0.0.1:3000/api/cart/', {
+            const response = await fetch(`${apiUrl}/api/cart/`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`

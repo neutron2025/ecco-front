@@ -8,13 +8,13 @@ import UserInfo from './UserInfo';
 import { AuthProvider,AuthContext } from './AuthContext';
 import ProductDetail from './ProductDetail';
 
-const App = () => {
+const App = ({apiUrl}) => {
   const [products, setProducts] = useState([]);
   const { isLoggedIn, setIsLoggedIn, isLoginModalOpen, setIsLoginModalOpen, handleLoginSuccess, handleLogout } = useContext(AuthContext);
 
 
   useEffect(() => {
-    fetch('http://localhost:3000/api')
+    fetch(`${apiUrl}/api`)
      .then(response => response.json())
      .then(data => {
         const filteredProducts = data.products.map(product => {
@@ -42,7 +42,7 @@ const App = () => {
           <div className='lg:w-1/3 md:w-1/2  sm:w-full p-4 rounded-md' key={product.ID || index}>
             <Link to={`/product/${product.ID}`}>
               <img
-                src={`http://localhost:3000/${product.mainImage.url}`}
+                src={`${apiUrl}/${product.mainImage.url}`}
                 alt={`Main Product Image for ${product.name}`}
                 className="w-full h-auto rounded-md border"
               />
