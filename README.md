@@ -26,7 +26,7 @@
 ```
 start
 ```
-PORT=2000 npm start
+PORT=2000 npm start   或者  npm start 
 
 ```
 
