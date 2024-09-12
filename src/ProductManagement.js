@@ -1,11 +1,12 @@
 import React,{useState,useEffect,useCallback} from 'react';
 import { useNavigate } from 'react-router-dom';
+const apiUrl = process.env.REACT_APP_API_URL;
 const ProductManagement = () => {
 
     const [products, setProducts] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [productsPerPage] = useState(8);
-    const baseImageUrl='http://localhost:3000/'
+    const baseImageUrl=`${apiUrl}/`
     const [totalProductsCount, setTotalProductsCount] = useState(0);
 
     const navigate = useNavigate();
@@ -34,7 +35,7 @@ const ProductManagement = () => {
     const checkAdminStatus=async()=>{
         try {
             const storedToken = localStorage.getItem('adminToken');
-            const response = await fetch('http://127.0.0.1:3000/api/admininfo', {
+            const response = await fetch(`${apiUrl}/api/admininfo`, {
                 headers: {
                     Authorization: `Bearer ${storedToken}`
                 }
@@ -60,7 +61,7 @@ const ProductManagement = () => {
     const fetchProducts = async () => {
         const token = localStorage.getItem('adminToken');
         try {
-        const response = await fetch(`http://127.0.0.1:3000/api/admin/products?page=${currentPage}&limit=${productsPerPage}`, {
+        const response = await fetch(`${apiUrl}/api/admin/products?page=${currentPage}&limit=${productsPerPage}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -98,7 +99,7 @@ const ProductManagement = () => {
         // 如果用户确认，执行删除操作
         try {
             // 发送 DELETE 请求到服务器
-            const response = await fetch(`http://127.0.0.1:3000/api/admin/delproduct/${productId}`, {
+            const response = await fetch(`${apiUrl}/api/admin/delproduct/${productId}`, {
               method: 'DELETE', // 明确指定请求方法为 DELETE
               headers: {
                   Authorization: `Bearer ${token}`

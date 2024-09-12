@@ -4,7 +4,7 @@ import React, { useState, useEffect,useContext  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import { AuthContext } from './AuthContext';
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const UserInfo = () => {
 
     const { isLoggedIn,setIsLoggedIn, handleLogout } = useContext(AuthContext);
@@ -70,7 +70,7 @@ const UserInfo = () => {
 
     const fetchUserData = async (token) => {
       try {
-          const response = await fetch('http://127.0.0.1:3000/api/userinfo', {
+          const response = await fetch(`${apiUrl}/api/userinfo`, {
               headers: {
                   Authorization: `Bearer ${token}`
               }
@@ -100,7 +100,7 @@ const UserInfo = () => {
     }
 
     try {
-        const response = await fetch('http://127.0.0.1:3000/api/cart/', {
+        const response = await fetch(`${apiUrl}/api/cart/`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`
@@ -118,7 +118,7 @@ const UserInfo = () => {
 
 const handleDeleteCartItem = async (productRef, size, color) => {
   try {
-      const response = await fetch('http://127.0.0.1:3000/api/cart/', {
+      const response = await fetch(`${apiUrl}/api/cart/`, {
           method: 'Delete',
           headers: {
               'Content-Type': 'application/json',

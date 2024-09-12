@@ -6,7 +6,7 @@ import Header from './Header'; // 导入 Header 组件
 import { AuthContext } from './AuthContext'; // 导入 AuthContext
 import LoginModal from './LoginModal'; 
 
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const ProductDetail = React.memo(()  => {
   const [productDetail, setProductDetail] = useState(null);
   const [currentImageUrl, setCurrentImageUrl] = useState('');
@@ -22,7 +22,7 @@ const ProductDetail = React.memo(()  => {
   useEffect(() => {
     if (productId) {
       console.log('Fetching product detail for productId:', productId);
-      fetch(`http://localhost:3000/api/product/${productId}`)
+      fetch(`${apiUrl}/api/product/${productId}`)
        .then(response => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -33,7 +33,7 @@ const ProductDetail = React.memo(()  => {
         setProductDetail(data)
         const mainImage = data.images.find(img => img.main_image);
           if (mainImage) {
-            setCurrentImageUrl(`http://localhost:3000/${mainImage.url}`);
+            setCurrentImageUrl(`${apiUrl}/${mainImage.url}`);
           }
       })
        .catch(error => console.error('Error fetching product detail:', error));
@@ -55,7 +55,7 @@ const ProductDetail = React.memo(()  => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:3000/api/cart/', {
+      const response = await fetch(`${apiUrl}/api/cart/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ const {
 
 
   // const mainImageUrl = `http://localhost:3000/${productDetail.images.find(img => img.main_image).url}`;
-  const colorVariantImages = productDetail.images.filter(img => img.type === 'color_variant').map(img => `http://localhost:3000/${img.url}`);
+  const colorVariantImages = productDetail.images.filter(img => img.type === 'color_variant').map(img => `${apiUrl}/${img.url}`);
 
 
   const handleSizeClick = (size) => {

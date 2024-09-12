@@ -1,6 +1,6 @@
 import { data } from 'autoprefixer';
 import React, { useState, useEffect } from 'react';
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const AddressInfo = ({ onAddressSelect }) => {
     const [addresses, setAddresses] = useState([]);
     const [selectedAddressId, setSelectedAddressId] = useState(null);
@@ -26,7 +26,7 @@ const AddressInfo = ({ onAddressSelect }) => {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await fetch('http://127.0.0.1:3000/api/address',{
+            const response = await fetch(`${apiUrl}/api/address`,{
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
@@ -73,8 +73,8 @@ const AddressInfo = ({ onAddressSelect }) => {
     const handleSaveAddress = async () => {
         try {
             const url = editingAddressId
-                ? `http://localhost:3000/api/address/${editingAddressId}`
-                : 'http://localhost:3000/api/address';
+                ? `${apiUrl}/api/address/${editingAddressId}`
+                : `${apiUrl}/api/address`;
             
             const method = editingAddressId ? 'PUT' : 'POST';
 
@@ -110,7 +110,7 @@ const AddressInfo = ({ onAddressSelect }) => {
 
     const handleDeleteAddress = async (addressId) => {
         try {
-            const response = await fetch(`http://127.0.0.1:3000/api/address/${addressId}`, {
+            const response = await fetch(`${apiUrl}/api/address/${addressId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

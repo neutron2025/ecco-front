@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const AddProduct = () => {
 
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ const AddProduct = () => {
  
       const adminToken = localStorage.getItem('adminToken');
       try {
-        const response = await fetch('http://localhost:3000/api/admin/addproduct', {
+        const response = await fetch(`${apiUrl}/api/admin/addproduct`, {
           method: 'POST',
           body: formData,
           headers: {

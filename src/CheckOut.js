@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 import AddressInfo from './AddressInfo';
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const Checkout = () => {
     const [cartItems, setCartItems] = useState([]);
     const { isLoggedIn } = useContext(AuthContext);
@@ -26,7 +26,7 @@ const Checkout = () => {
         }
 
         try {
-            const response = await fetch('http://127.0.0.1:3000/api/cart/', {
+            const response = await fetch(`${apiUrl}/api/cart/`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -45,10 +45,51 @@ const Checkout = () => {
     const handleAddressSelect = (addressId) => {
         setSelectedAddressId(addressId);
         // 可以在这里执行其他操作，比如更新订单信息等
-        console.log('Selected order address ID:', addressId);
+        console.log('Selected order address ID:', selectedAddressId);
     };
 
     const handleConfirmOrder = async () => {
+        if (!selectedAddressId) {
+            alert('请选择收货地址');
+            return;
+        }
+
+        const token = localStorage.getItem('jwtToken');
+        if (!token) {
+            console.error('Token not found');
+            navigate('/');
+            return;
+        }
+
+        try {
+            console.log(selectedAddressId)
+            const response = await fetch(`${apiUrl}/api/orders/create`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    address_item_ref: selectedAddressId,
+                })
+                
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('订单创建成功:', data);
+
+            // 清空购物车（前端状态）
+            setCartItems([]);
+        } catch (error) {
+            // console.log(selectedAddressId)
+            console.error('创建订单时出错:', error);
+            alert('创建订单失败，请重试');
+            return;
+        }
         // 这里添加确认订单的逻辑 提交订单
         alert('订单已确认，即将进行支付');
         // 可以在这里添加导航到支付页面的逻辑

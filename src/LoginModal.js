@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const LoginModal = ({ onClose  , setIsLoggedIn }) => {
 
@@ -23,7 +23,7 @@ const LoginModal = ({ onClose  , setIsLoggedIn }) => {
             // 注册逻辑
             console.log('Registering:', username, password);
             try {
-                const response = await fetch('http://127.0.0.1:3000/api/signup', {
+                const response = await fetch(`${apiUrl}/api/signup`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ const LoginModal = ({ onClose  , setIsLoggedIn }) => {
         else {
         // 登录逻辑
             try {
-                const response = await fetch('http://127.0.0.1:3000/api/login', {
+                const response = await fetch(`${apiUrl}/api/login`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json',},
                     body: JSON.stringify({ username, password }),
