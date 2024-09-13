@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect,useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 import AddressInfo from './AddressInfo';
-import AlipayQRCode from './AlipayQRCode';
+import QRCode from 'qrcode';
 const apiUrl = process.env.REACT_APP_API_URL;
 const Checkout = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -104,11 +104,6 @@ const Checkout = () => {
             alert('创建订单失败，请重试');
             return;
         }
-        return(
-            <>
-         {showQrCode && qrCode && <AlipayQRCode qrCodeUrl={qrCode} />}
-            </>
-        )
 
     };
 
@@ -116,6 +111,19 @@ const Checkout = () => {
     const handleGoBack = () => {
         navigate(-1); // 返回上一页
     };
+
+
+
+
+// 生成二维码
+    const qrCodeRef = useRef(null);
+    useEffect(() => {
+        if (qrCode && qrCodeRef.current) {
+            QRCode.toCanvas(qrCodeRef.current, qrCode, function (error) {
+                if (error) console.error('生成二维码时出错:', error);
+            });
+        }
+    }, [qrCode]);
 
     return (
         <div className="container mx-auto p-4">
@@ -149,11 +157,14 @@ const Checkout = () => {
                     </button>
                 </>
             )}
-            {showQrCode && (
+            {qrCode ? (
                 <div className="mt-4">
                     <h2 className="text-xl font-bold mb-2">请扫描二维码完成支付</h2>
-                    <img src={qrCode} alt="支付二维码" className="mx-auto" />
+                    <canvas ref={qrCodeRef}></canvas>
+                    <p className="mt-2">二维码数据: {qrCode}</p>
                 </div>
+            ) : (
+                <p>等待生成二维码...</p>
             )}
         </div>
     );
