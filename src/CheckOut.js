@@ -2,12 +2,15 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 import AddressInfo from './AddressInfo';
+import AlipayQRCode from './AlipayQRCode';
 const apiUrl = process.env.REACT_APP_API_URL;
 const Checkout = () => {
     const [cartItems, setCartItems] = useState([]);
     const { isLoggedIn } = useContext(AuthContext);
     const navigate = useNavigate();
     const [selectedAddressId, setSelectedAddressId] = useState(null);
+    const [qrCode, setQrCode] = useState(null);
+    const [showQrCode, setShowQrCode] = useState(false);
 
     useEffect(() => {
         if (!isLoggedIn) {
@@ -48,6 +51,8 @@ const Checkout = () => {
         console.log('Selected order address ID:', selectedAddressId);
     };
 
+
+
     const handleConfirmOrder = async () => {
         if (!selectedAddressId) {
             alert('请选择收货地址');
@@ -84,19 +89,27 @@ const Checkout = () => {
 
             // 清空购物车（前端状态）
             setCartItems([]);
+
+            // 处理支付宝当面付的支付二维码
+            if (data.qr_code) {
+                setQrCode(data.qr_code);
+                setShowQrCode(true);
+                console.log('支付二维码:', data.qr_code);
+            } else {
+                console.error('未收到支付二维码');
+            }
         } catch (error) {
             // console.log(selectedAddressId)
             console.error('创建订单时出错:', error);
             alert('创建订单失败，请重试');
             return;
         }
-        // 这里添加确认订单的逻辑 提交订单
-        alert('订单已确认，即将进行支付');
-        // 可以在这里添加导航到支付页面的逻辑
-        // 支付成功后，修改订单状态
-        // 支付成功后，清空购物车,
-        // 支付成功后，增加用户积分
-        // 支付成功后，跳转到订单页面
+        return(
+            <>
+         {showQrCode && qrCode && <AlipayQRCode qrCodeUrl={qrCode} />}
+            </>
+        )
+
     };
 
     // 添加返回函数
@@ -135,6 +148,12 @@ const Checkout = () => {
                         确认支付
                     </button>
                 </>
+            )}
+            {showQrCode && (
+                <div className="mt-4">
+                    <h2 className="text-xl font-bold mb-2">请扫描二维码完成支付</h2>
+                    <img src={qrCode} alt="支付二维码" className="mx-auto" />
+                </div>
             )}
         </div>
     );
