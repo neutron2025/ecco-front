@@ -1,10 +1,11 @@
 
 
 import React, { useState, useEffect,useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import Header from './Header'; // 导入 Header 组件
 import { AuthContext } from './AuthContext'; // 导入 AuthContext
 import LoginModal from './LoginModal'; 
+
 
 const apiUrl = process.env.REACT_APP_API_URL;
 const ProductDetail = React.memo(()  => {
@@ -16,6 +17,7 @@ const ProductDetail = React.memo(()  => {
   const [selectedColor, setSelectedColor] = useState('');
   const [isAddToCartEnabled, setIsAddToCartEnabled] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate(); 
 
 
 //产品信息获取
@@ -84,12 +86,7 @@ const ProductDetail = React.memo(()  => {
     }
   };
 
-
-
   console.log(productDetail)
-
-  console.log("productDetail")
-
 
   if (!productDetail) {
     return <div>Loading...</div>;
@@ -125,6 +122,38 @@ const {
     setSelectedColor(color);
   };
   
+  const handleCheckout = async () => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${apiUrl}/api/cart/`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('获取购物车信息失败');
+      }
+
+      const cartData = await response.json();
+      console.log("购物车数据:", cartData);
+
+      if (cartData.CartItems && cartData.CartItems.length > 0) {
+        navigate('/userinfo'); // 导航到个人主页
+      } else {
+        alert('购物车为空，请先添加商品');
+      }
+    } catch (error) {
+      console.error('检查购物车失败:', error);
+      alert('检查购物车失败，请稍后再试');
+    }
+  };
+
   return (
     <div>
        <Header isLoggedIn={isLoggedIn} setIsLoginModalOpen={setIsLoginModalOpen} />  {/* 添加 Header 组件 */}
@@ -250,6 +279,12 @@ const {
           >
             添加到购物车
           </button>
+          <button
+              className="px-4 py-2 rounded bg-green-500 text-white"
+              onClick={handleCheckout}
+            >
+              立即去结算
+            </button>
         </div>
       </div>
 

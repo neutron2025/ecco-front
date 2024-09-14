@@ -161,7 +161,7 @@ const AddressInfo = ({ onAddressSelect }) => {
                             onChange={() => handleAddressSelect(address.ID)}
                         />
                         <label htmlFor={`address-${address.ID}`}>
-                            {address.first_name} {address.last_name}, {address.phone}
+                             {address.last_name}{address.first_name}, {address.phone}
                             <br />
                             {address.street}, {address.city}, {address.state} {address.zip_code}
                         </label>
@@ -180,8 +180,8 @@ const AddressInfo = ({ onAddressSelect }) => {
                 </button>
             ) : (
                 <div className="new-address-form">
-                    <input name="first_name" placeholder="名" value={newAddress.first_name} onChange={handleNewAddressChange} />
                     <input name="last_name" placeholder="姓" value={newAddress.last_name} onChange={handleNewAddressChange} />
+                    <input name="first_name" placeholder="名" value={newAddress.first_name} onChange={handleNewAddressChange} />
                     <input name="phone" placeholder="电话" value={newAddress.phone} onChange={handleNewAddressChange} />
                     <input name="street" placeholder="街道地址" value={newAddress.street} onChange={handleNewAddressChange} />
                     <input name="city" placeholder="城市" value={newAddress.city} onChange={handleNewAddressChange} />
