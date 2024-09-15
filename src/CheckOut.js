@@ -87,8 +87,8 @@ const Checkout = () => {
             }
 
             const data = await response.json();
-            console.log('订单创建成功:', data.order.ID);
-            setOrderId(data.order.ID);
+            console.log('订单创建成功:', data.order.id);
+            setOrderId(data.order.id);
 
             // 清空购物车（前端状态）
             setCartItems([]);
@@ -223,13 +223,15 @@ const Checkout = () => {
 
     return (
         <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-4">结算页面</h1>
-            <button 
+            <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-bold mb-4">结算页面</h1>
+                <button 
                     onClick={handleGoBack}
-                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                     className="bg-gray-500 text-white px-3 mr-4 py-2 rounded hover:bg-gray-600"
                 >
                     返回
                 </button>
+            </div>
             {cartItems.length === 0 ? (
             <div>
                 <h2 className="text-xl font-bold mb-2">订单数据</h2>

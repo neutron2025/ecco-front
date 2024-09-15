@@ -75,8 +75,8 @@ const App = () => {
             />
           )}
           <Routes>
-            <Route path="/" element={<div className="flex flex-wrap">{filteredProducts}</div>} />
-            <Route
+            <Route path="/" element={<div className="flex flex-wrap mx-4 md:mx-16 p-1 md:px-8">{filteredProducts}</div>} />
+            <Route 
               path="/userinfo"
               element={
                 <>

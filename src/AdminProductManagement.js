@@ -78,7 +78,9 @@ const AdminProductManagement = () => {
             </div>
             {/* 订单管理模块 */}
             <div className="bg-white p-6 md:w-full rounded shadow-md">
-              <h2 className="text-xl font-semibold mb-4">Order Management</h2>
+              <div className='bg-cyan-400 rounded-lg h-16  shadow-md hover:shadow-lg cursor-pointer flex justify-center items-center text-center' onClick={() => navigate('/admin/order-management')}>
+                <h2 className="text-xl font-semibold mb-4 mt-4 cursor-pointer text-center" >Order Management</h2>
+              </div>
               <ul>
                 <li className="mb-2">View Orders</li>
                 <li className="mb-2">Update Order Status</li>

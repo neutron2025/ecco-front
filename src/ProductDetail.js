@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect,useContext } from 'react';
-import { useParams,useNavigate } from 'react-router-dom';
+import { useParams,useNavigate,Link } from 'react-router-dom';
 import Header from './Header'; // 导入 Header 组件
 import { AuthContext } from './AuthContext'; // 导入 AuthContext
 import LoginModal from './LoginModal'; 
@@ -93,21 +93,15 @@ const ProductDetail = React.memo(()  => {
   }
 // 以下是产品详情的展示部分
 const {
-  ID,
   name,
   description,
   price,
   created_at,
-  rating,
-  images,
   size_colors,
-  inventory
 } = productDetail;
 
   const formattedDate = new Date(created_at).toLocaleDateString();
 
-
-  // const mainImageUrl = `http://localhost:3000/${productDetail.images.find(img => img.main_image).url}`;
   const colorVariantImages = productDetail.images.filter(img => img.type === 'color_variant').map(img => `${apiUrl}/${img.url}`);
 
 
@@ -154,6 +148,8 @@ const {
     }
   };
 
+
+
   return (
     <div>
        <Header isLoggedIn={isLoggedIn} setIsLoginModalOpen={setIsLoginModalOpen} />  {/* 添加 Header 组件 */}
@@ -163,27 +159,28 @@ const {
               setIsLoggedIn={handleLoginSuccess} 
             />
           )}
-      <div className="flex">
-        <div className="product-detail w-1/2">
+
+      <div className="flex flex-col md:flex-row">
+        <div className="product-detail w-full md:w-1/2">
           {/* Main Product Image */}
-          <div className="product-image-container ">
+          <div className="product-image-container mx-auto my-4 md:my-8 max-w-sm md:max-w-md lg:max-w-lg">
             <img
               src={currentImageUrl}
               alt="Main Product Image"
-              className="main-product-image w-full h-auto"
+              className="main-product-image w-full h-auto object-contain"
             />
           </div>
 
           {/* Color Variant Images */}
-          <div className="color-variant-container mt-8">
-            <h3 className="text-lg font-bold">Choose a color</h3>
-            <div className="flex mt-2">
+          <div className="color-variant-container mt-2 px-4">
+            <h3 className="text-sm md:text-lg font-bold">选择颜色查看</h3>
+            <div className="flex flex-wrap mt-2">
               {colorVariantImages.map((url, index) => (
                 <img
                   key={index}
                   src={url}
                   alt={`Color variant ${index}`}
-                  className="h-24 w-24 mr-2 cursor-pointer"
+                  className="h-16 w-16 md:h-20 md:w-20 lg:h-32 lg:w-32 m-1 cursor-pointer"
                   style={{ objectFit: 'cover' }}
                   onClick={() => setCurrentImageUrl(url)}
                 
@@ -192,55 +189,27 @@ const {
             </div>
           </div>
 
-          {/* Product Information */}
-          <div className="product-info mt-4">
-            <h2 className="text-xl font-bold">{name}</h2>
-            <p className="text-gray-700">{description}</p>
-            <div className="product-price text-2xl font-semibold">￥{price}</div>
-          </div>
+
         </div>
 
-        {/* <div className="size-color-selection w-1/3 mt-8">
-          <div className="size-selection mb-4">
-            <h3 className="text-lg font-bold">Size</h3>
-            <div className="flex mt-2">
-              {size_colors.map((sizeColor, index) => (
-                <button
-                  key={index}
-                  className={`mr-2 p-2 border ${selectedSize === sizeColor.size ? 'border-blue-500' : 'border-gray-300'}`}
-                  onClick={() => handleSizeClick(sizeColor.size)}
-                >
-                  {sizeColor.size}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="color-selection">
-            <h3 className="text-lg font-bold">Color</h3>
-            <div className="flex mt-2">
-              {selectedSize && size_colors.find(sc => sc.size === selectedSize).colors.map((color, index) => (
-                <button
-                  key={index}
-                  className={`mr-2 p-2 border ${selectedColor === color ? 'border-blue-500' : 'border-gray-300'}`}
-                  onClick={() => handleColorClick(color)}
-                >
-                  {color}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div> */}
-
-        <div className="flex">
+        <div className="color-size-quantity w-full md:w-1/2 flex justify-center">
         {/* ... 产品图片和信息 ... */}
-        <div className="size-color-selection w-1/3 mt-8">
+        <div className="size-color-selection w-full md:w-4/5 mt-4 md:mt-8 px-4">
+            {/* Product Information */}
+          <div className="product-info mt-2 flex flex-row">
+            <div className="product-info-left w-4/5  md:w-1/2 text-left">
+              <h2 className="text-xl font-bold">{name}</h2>
+              <p className="text-gray-700">{description}</p>
+            </div>
+            <div className="product-price text-2xl font-semibold">￥{price}</div>
+          </div>
           <div className="size-selection mb-4">
-            <h3 className="text-lg font-bold">颜色</h3>
-            <div className="flex mt-2">
+            <h3 className="text-sm md:text-lg font-bold">颜色</h3>
+            <div className="flex flex-wrap mt-2">
               {size_colors.map((sizeColor, index) => (
                 <button
                   key={index}
-                  className={`mr-2 p-2 border ${selectedSize === sizeColor.size ? 'border-blue-500' : 'border-gray-300'}`}
+                  className={`mr-2 mb-2 p-2 border ${selectedSize === sizeColor.size ? 'border-blue-500' : 'border-gray-300'}`}
                   onClick={() => handleSizeClick(sizeColor.size)}
                 >
                   {sizeColor.size}
@@ -249,12 +218,12 @@ const {
             </div>
           </div>
           <div className="color-selection mb-4">
-            <h3 className="text-lg font-bold">尺寸</h3>
-            <div className="flex mt-2">
+            <h3 className="text-sm md:text-lg font-bold">尺寸</h3>
+            <div className="flex flex-wrap mt-2">
               {selectedSize && size_colors.find(sc => sc.size === selectedSize).colors.map((color, index) => (
                 <button
                   key={index}
-                  className={`mr-2 p-2 border ${selectedColor === color ? 'border-blue-500' : 'border-gray-300'}`}
+                  className={`mr-2 mb-2 p-2 border ${selectedColor === color ? 'border-blue-500' : 'border-gray-300'}`}
                   onClick={() => handleColorClick(color)}
                 >
                   {color}
@@ -263,7 +232,7 @@ const {
             </div>
           </div>
           <div className="quantity-selection mb-4">
-          <h3 className="text-lg font-bold">数量</h3>
+          <h3 className="text-sm md:text-lg font-bold">数量</h3>
             <input
               type="number"
               min="1"
@@ -272,30 +241,34 @@ const {
               className="mt-2 p-2 border border-gray-300 rounded"
             />
           </div>
+          <div className='add-button flex '>
           <button
-            className={`mt-4 px-4 py-2 rounded ${isAddToCartEnabled ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+            className={`mt-4 mx-2 px-4 py-2 rounded ${isAddToCartEnabled ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
             onClick={handleAddToCart}
             disabled={!isAddToCartEnabled}
           >
             添加到购物车
           </button>
           <button
-              className="px-4 py-2 rounded bg-green-500 text-white"
+              className="mt-4 mx-2 px-4 py-2 rounded bg-green-500 text-white"
               onClick={handleCheckout}
             >
               立即去结算
             </button>
+          </div>
+
+        </div>
         </div>
       </div>
 
-      </div>
+
 
     </div>
 
-  );
-
+  )
 
 });
+
 
 
 export default ProductDetail;
