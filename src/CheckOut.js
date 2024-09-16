@@ -15,6 +15,7 @@ const Checkout = () => {
     const [orderData, setOrderData] = useState(null); 
     const [error, setError] = useState(null);
     const [addressData, setAddressData] = useState(null);
+    const [paymentStatus, setPaymentStatus] = useState('');
 
     useEffect(() => {
         if (!isLoggedIn) {
@@ -220,6 +221,40 @@ const Checkout = () => {
             });
         }
     }, [qrCode]);
+// 查询订单状态
+    const handlePaymentCheck = async () => {
+        try {
+            const response = await fetch(`${apiUrl}/api/query_order/${orderId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 429) {
+                    // 处理频繁请求的情况
+                    const errorData = await response.json();
+                    setPaymentStatus(errorData.message || "请求过于频繁，请稍后再试");
+                    return;
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            setPaymentStatus(data.message);
+
+            if (data.message !== "订单尚未支付") {
+                // 如果订单已支付，等待一段时间后返回
+                setTimeout(() => {
+                    navigate('/'); // 或者导航到其他适当的页面
+                }, 3000);
+            }
+        } catch (error) {
+            console.error('查询订单状态时出错:', error);
+            setPaymentStatus('查询订单状态失败，请重试');
+        }
+    };
 
     return (
         <div className="container mx-auto p-4">
@@ -272,7 +307,17 @@ const Checkout = () => {
                     <div className="border-4 border-blue-500 p-2 rounded-lg shadow-lg">
                         <canvas ref={qrCodeRef}></canvas>
                     </div>
-                    <p className="mt-4 text-sm text-gray-600">二维码已生成，请使用支付宝扫描</p>
+                    <p className="mt-4 text-sm text-gray-600">二维码已生成，15分钟内有效，请使用支付宝扫描</p>
+                    {paymentStatus && (
+                        <p className="mt-2 text-md font-semibold text-blue-600">{paymentStatus}</p>
+                    )}
+                    
+                    <button 
+                        onClick={handlePaymentCheck}
+                        className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    >
+                        我已支付
+                    </button>
                 </div>
             ) : (
                 <p className="mt-4 text-lg text-gray-600">正在生成支付二维码，请稍候...</p>

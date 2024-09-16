@@ -6,6 +6,7 @@ const apiUrl = process.env.REACT_APP_API_URL;
 const OrderManagement = () => {
     const [orders, setOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const [addressDetails, setAddressDetails] = useState(null);
     const [filter, setFilter] = useState('all');
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(15);
@@ -80,8 +81,26 @@ const OrderManagement = () => {
     }
   };
 
-  const handleOrderClick = (order) => {
+  const handleOrderClick = async (order) => {
     setSelectedOrder(order);
+    if (order.items && order.items.length > 0) {
+        const addressID = order.items[0].address_item_ref;
+        try {
+          const response = await fetch(`${apiUrl}/api/admin/address/${addressID}`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            }
+          });
+          if (!response.ok) {
+            throw new Error('获取地址信息失败');
+          }
+          const addressData = await response.json();
+          setAddressDetails(addressData);
+        } catch (error) {
+          console.error('获取地址信息出错:', error);
+          setAddressDetails(null);
+        }
+      }
   };
 
   const handleFilterChange = (e) => {
@@ -261,9 +280,18 @@ const OrderManagement = () => {
         }
       };
 
+      const handleReturn = () => {
+        navigate('/admin/management'); // 返回管理员面板路径，根据实际调整
+      };
+
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">订单管理</h1>
+        <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold mb-4">订单管理</h1>
+        <button className="bg-gray-500 text-white p-2 rounded" onClick={handleReturn}>
+                    Return
+                </button>
+        </div>
       <div className="mb-4 flex justify-between items-center">
         <div>
           <label htmlFor="filter" className="mr-2">筛选订单：</label>
@@ -287,21 +315,6 @@ const OrderManagement = () => {
         <div className="w-2/5 pr-4">
           <h2 className="text-xl font-semibold mb-2">订单列表</h2>
           {orders && orders.length > 0 ? (
-        //   <ul className="space-y-2">
-        //     {filteredOrders.map(order => (
-        //     <li 
-        //     key={order.id} 
-        //     className={`border p-2 cursor-pointer hover:bg-gray-100 ${
-        //       order.payment_status === '已支付' && order.items.some(item => item.shipping_status === '待发货')
-        //         ? 'bg-yellow-200' 
-        //         : ''
-        //     }`}
-        //     onClick={() => handleOrderClick(order)}
-        //     >
-        //     订单号: {order.id} - 支付状态: {order.payment_status} - 总金额: ¥{order.total_price.toFixed(2)}
-        //   </li>
-        //     ))}
-        //   </ul>
 
 <ul className="space-y-2">
   {orders && orders.map(order => {
@@ -357,8 +370,24 @@ const OrderManagement = () => {
               <p>订单号: {selectedOrder.id}</p>
               <p>用户ID: {selectedOrder.user_ref}</p>
               <p>创建时间: {format(new Date(selectedOrder.created_at), 'yyyy-MM-dd HH:mm:ss')}</p>
+              
+              
+              <p>订单地址ID: {selectedOrder.items && selectedOrder.items.length > 0 ? selectedOrder.items[0].address_item_ref : '无地址信息'}</p>
+              <p>订单地址: 
+              {addressDetails ? (
+                <span>
+                  {addressDetails.first_name} {addressDetails.last_name}, 
+                  {addressDetails.phone}, 
+                  {addressDetails.street}, {addressDetails.city}, 
+                  {addressDetails.state} {addressDetails.zip_code}
+                </span>
+              ) : (
+                '加载中...'
+              )}
+            </p>
               <p>支付状态: {selectedOrder.payment_status}</p>
               <p>总金额: ¥{selectedOrder.total_price.toFixed(2)}</p>
+
               <h3 className="font-semibold mt-2">商品列表:</h3>
               {selectedOrder.items ? (
                 <ul>
@@ -368,13 +397,7 @@ const OrderManagement = () => {
                     <div>
                       数量: {item.quantity} - 颜色: {item.size} - 尺寸: {item.color} - 单价: ¥{item.price.toFixed(2)} - 运送状态: {item.shipping_status} {item.deliverid && ` - 快递单号: ${item.deliverid}`}
 
-                      {/* <button
-                    onClick={() => handleEditTrackingNumber(selectedOrder.id, item.product_ref)}
-                    className="ml-2 bg-blue-500 text-white px-2 py-1 rounded text-xs"
-                  >
-                    编辑快递单号
-                  </button> */}
-                                {selectedOrder.payment_status === '已支付' && item.shipping_status === '已发货' && (
+                    {selectedOrder.payment_status === '已支付' && item.shipping_status === '已发货' && (
                     <button
                       onClick={() => handleEditTrackingNumber(selectedOrder.id, item.product_ref)}
                       className="ml-2 bg-blue-500 text-white px-2 py-1 rounded text-xs"

@@ -40,6 +40,7 @@ const App = () => {
     return products.map((product, index) => {
       if (product.mainImage) {
         return (
+          <>
           <div className='lg:w-1/3 md:w-1/2  sm:w-full p-4 rounded-md' key={product.ID || index}>
             <Link to={`/product/${product.ID}`}>
               <img
@@ -55,6 +56,8 @@ const App = () => {
               </div>
             </Link>
           </div>
+          
+          </>
         );
       }
       return null;
@@ -76,6 +79,7 @@ const App = () => {
           )}
           <Routes>
             <Route path="/" element={<div className="flex flex-wrap mx-4 md:mx-16 p-1 md:px-8">{filteredProducts}</div>} />
+
             <Route 
               path="/userinfo"
               element={
@@ -90,6 +94,9 @@ const App = () => {
             />
            
           </Routes>
+          <div className="text-center text-gray-500"> {/* 使用 Tailwind CSS 类 */}
+                <a href="https://beian.miit.gov.cn" className="hover:text-gray-700">青ICP备2024003149号-1</a>
+          </div>
           </div>
   
       

@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 const AdminProductManagement = () => {
   const navigate = useNavigate();
   const [isLogoutClicked, setIsLogoutClicked] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
@@ -34,6 +35,54 @@ const AdminProductManagement = () => {
         }
       }, [navigate]);
   
+  const handleExportOrders = async () => {
+    setIsExporting(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/export_orders`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || '导出失败');
+      }
+
+      // 获取文件名
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filenameMatch = contentDisposition && contentDisposition.match(/filename="?(.+)"?/i);
+      const filename = filenameMatch ? filenameMatch[1] : '订单详情导出.xlsx';
+            // 创建 Blob
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      // 创建一个临时的 <a> 元素来下载文件
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+
+      // 清理
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toast.success('订单导出成功');
+    } catch (error) {
+      console.error('导出订单时出错:', error);
+      toast.error(`导出订单失败: ${error.message}`);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+    
+
+
+
+
       return (
         <div className="p-8 bg-gray-100 min-h-screen">
           <h1 className="text-3xl font-bold mb-6">Admin Product Management Dashboard</h1>
@@ -74,7 +123,17 @@ const AdminProductManagement = () => {
                 <p>Unique visitors: [Number of unique visitors]</p>
                 <p>Page views: [Number of page views]</p>
               </div>
-              <button className="bg-blue-500 text-white p-2 rounded mt-4">Export Orders</button>
+              {/* <button className="bg-blue-500 text-white p-2 rounded mt-4"
+               onClick={handleExportOrders}
+              >Export Orders</button> */}
+                      <button 
+          className={`bg-blue-500 text-white p-2 rounded mt-4 hover:bg-blue-600 ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
+          onClick={handleExportOrders}
+          disabled={isExporting}
+        >
+          {isExporting ? '导出中...' : '导出订单'}
+        </button>
+        
             </div>
             {/* 订单管理模块 */}
             <div className="bg-white p-6 md:w-full rounded shadow-md">

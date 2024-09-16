@@ -197,11 +197,11 @@ const {
         <div className="size-color-selection w-full md:w-4/5 mt-4 md:mt-8 px-4">
             {/* Product Information */}
           <div className="product-info mt-2 flex flex-row">
+            <div className="product-price mr-4 text-2xl font-semibold">￥{price}</div>
             <div className="product-info-left w-4/5  md:w-1/2 text-left">
               <h2 className="text-xl font-bold">{name}</h2>
               <p className="text-gray-700">{description}</p>
             </div>
-            <div className="product-price text-2xl font-semibold">￥{price}</div>
           </div>
           <div className="size-selection mb-4">
             <h3 className="text-sm md:text-lg font-bold">颜色</h3>

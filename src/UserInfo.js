@@ -91,74 +91,74 @@ const UserInfo = () => {
       }
   };
 
-  const fetchCartItems = async (token) => {
-     token = localStorage.getItem('jwtToken');
-    if (!token) {
-        console.error('Token not found');
-        handleLogout();
-        return;
-    }
+    const fetchCartItems = async (token) => {
+        token = localStorage.getItem('jwtToken');
+        if (!token) {
+            console.error('Token not found');
+            handleLogout();
+            return;
+        }
 
+        try {
+            const response = await fetch(`${apiUrl}/api/cart/`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            setCartItems(data.CartItems || []);
+        } catch (error) {
+            console.error('获取购物车信息时出错:', error);
+        }
+    };
+
+    const handleDeleteCartItem = async (productRef, size, color) => {
     try {
         const response = await fetch(`${apiUrl}/api/cart/`, {
-            method: 'GET',
+            method: 'Delete',
             headers: {
-                Authorization: `Bearer ${token}`
-            }
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
+            },
+            body: JSON.stringify({
+                ProductRef: productRef,
+                Size: size,
+                Color: color
+            })
         });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
-        setCartItems(data.CartItems || []);
+        // 重新获取购物车列表
+        fetchCartItems(localStorage.getItem('jwtToken'));
     } catch (error) {
-        console.error('获取购物车信息时出错:', error);
+        console.error('删除购物车项目时出错:', error);
     }
-};
+    };
 
-const handleDeleteCartItem = async (productRef, size, color) => {
-  try {
-      const response = await fetch(`${apiUrl}/api/cart/`, {
-          method: 'Delete',
-          headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
-          },
-          body: JSON.stringify({
-              ProductRef: productRef,
-              Size: size,
-              Color: color
-          })
-      });
-      if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      // 重新获取购物车列表
-      fetchCartItems(localStorage.getItem('jwtToken'));
-  } catch (error) {
-      console.error('删除购物车项目时出错:', error);
-  }
-};
-
- // 添加结算函数
- const handleCheckout = () => {
-  // 这里可以添加一些验证逻辑，例如检查购物车是否为空
-  if (cartItems.length === 0) {
-      alert('购物车为空，无法结算');
-      return;
-  }
-  // 导航到结算页面
-  navigate('/checkout');
-};
+    // 添加结算函数
+    const handleCheckout = () => {
+    // 这里可以添加一些验证逻辑，例如检查购物车是否为空
+    if (cartItems.length === 0) {
+        alert('购物车为空，无法结算');
+        return;
+    }
+    // 导航到结算页面
+    navigate('/checkout');
+    };
 
 
-if (isLoading) {
-  return <div>加载中...</div>;
-}
+    if (isLoading) {
+    return <div>加载中...</div>;
+    }
 
-if (!isLoggedIn) {
-  return <div>请登录以查看用户信息。</div>;
-}
+    if (!isLoggedIn) {
+    return <div>请登录以查看用户信息。</div>;
+    }
 
 
     //no token ,so cant get userData, solve the no userData situation
