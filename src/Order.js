@@ -46,6 +46,10 @@ const Orders = () => {
     if (isLoading) {
         return <div>加载中...</div>;
     }
+    // 添加对 ordersData 和 ordersData.orders 的检查
+    if (!ordersData || !ordersData.orders) {
+        return <div>无法加载订单数据。</div>;
+    }
 
     return (
         // <div className="container mx-auto px-4">
