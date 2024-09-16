@@ -244,14 +244,14 @@ const {
           </div>
           <div className='add-button flex '>
           <button
-            className={`mt-4 mx-2 px-4 py-2 rounded ${isAddToCartEnabled ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+            className={`my-4 mx-2 px-4 py-2 rounded ${isAddToCartEnabled ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
             onClick={handleAddToCart}
             disabled={!isAddToCartEnabled}
           >
             添加到购物车
           </button>
           <button
-              className="mt-4 mx-2 px-4 py-2 rounded bg-green-500 text-white"
+              className="my-4 mx-2 px-4 py-2 rounded bg-green-500 text-white"
               onClick={handleCheckout}
             >
               立即去结算
