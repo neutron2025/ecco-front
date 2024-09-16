@@ -8,6 +8,7 @@ import UserInfo from './UserInfo';
 import { AuthProvider,AuthContext } from './AuthContext';
 import ProductDetail from './ProductDetail';
 const apiUrl = process.env.REACT_APP_API_URL;
+const imageUrl = process.env.REACT_APP_IMAGE_URL;
 
 const App = () => {
   const [products, setProducts] = useState([]);
@@ -44,7 +45,7 @@ const App = () => {
           <div className='lg:w-1/3 md:w-1/2  sm:w-full p-4 rounded-md' key={product.ID || index}>
             <Link to={`/product/${product.ID}`}>
               <img
-                src={`${apiUrl}/${product.mainImage.url}`}
+                src={`${imageUrl}/${product.mainImage.url}`}
                 alt={`Main Product Image for ${product.name}`}
                 className="w-full h-auto rounded-md border"
               />

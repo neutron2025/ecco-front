@@ -1,12 +1,13 @@
 import React,{useState,useEffect,useCallback} from 'react';
 import { useNavigate } from 'react-router-dom';
 const apiUrl = process.env.REACT_APP_API_URL;
+const imageUrl = process.env.REACT_APP_IMAGE_URL;
 const ProductManagement = () => {
 
     const [products, setProducts] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [productsPerPage] = useState(8);
-    const baseImageUrl=`${apiUrl}/`
+    const baseImageUrl=`${imageUrl}/`
     const [totalProductsCount, setTotalProductsCount] = useState(0);
 
     const navigate = useNavigate();

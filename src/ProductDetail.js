@@ -8,6 +8,7 @@ import LoginModal from './LoginModal';
 
 
 const apiUrl = process.env.REACT_APP_API_URL;
+const imageUrl = process.env.REACT_APP_IMAGE_URL;
 const ProductDetail = React.memo(()  => {
   const [productDetail, setProductDetail] = useState(null);
   const [currentImageUrl, setCurrentImageUrl] = useState('');
@@ -35,7 +36,7 @@ const ProductDetail = React.memo(()  => {
         setProductDetail(data)
         const mainImage = data.images.find(img => img.main_image);
           if (mainImage) {
-            setCurrentImageUrl(`${apiUrl}/${mainImage.url}`);
+            setCurrentImageUrl(`${imageUrl}/${mainImage.url}`);
           }
       })
        .catch(error => console.error('Error fetching product detail:', error));
@@ -102,7 +103,7 @@ const {
 
   const formattedDate = new Date(created_at).toLocaleDateString();
 
-  const colorVariantImages = productDetail.images.filter(img => img.type === 'color_variant').map(img => `${apiUrl}/${img.url}`);
+  const colorVariantImages = productDetail.images.filter(img => img.type === 'color_variant').map(img => `${imageUrl}/${img.url}`);
 
 
   const handleSizeClick = (size) => {
