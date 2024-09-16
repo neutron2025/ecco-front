@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import { AuthContext } from './AuthContext';
 const apiUrl = process.env.REACT_APP_API_URL;
+
+
 const UserInfo = () => {
 
     const { isLoggedIn,setIsLoggedIn, handleLogout } = useContext(AuthContext);
@@ -167,6 +169,9 @@ const UserInfo = () => {
         return <div>Your login has already dated,login again.</div>;
     }
 
+    const handleOrdersClick = () => {
+        navigate('/orders');
+    };
     return (
 
       <div>
@@ -174,18 +179,23 @@ const UserInfo = () => {
           <>
             <Header isLoggedIn={isLoggedIn} setIsLoginModalOpen={() => {}}  />
 
+
+
             <h2>用户信息</h2>
-            <p>ID: {userData.id}</p>
-            <p>First Name: {userData.first_name}</p>
-            <p>Last Name: {userData.last_name}</p>
-            <p>Email: {userData.email}</p>
-            <p>Phone: {userData.phone}</p>
-            <p>Power: {userData.Pow}</p>
+    
+            <p className="flex items-center">
+              <img src={`${process.env.PUBLIC_URL}/favicon.ico`} className="w-4 h-4 mr-2" />
+              Power: {userData.Pow}
+            </p>
             <p>Power Address: {userData.PowAddress}</p>
-            {/* <p>Admin Flag: {userData.permissions.admin_flag? 'Yes' : 'No'}</p> */}
-            <p>Created At: {userData.created_at}</p>
-            <p>Updated At: {userData.updated_at}</p>
-            <button onClick={handleLogout}>Logout</button>
+ 
+                       <button 
+                        onClick={handleOrdersClick}
+                        className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600"
+                    >
+                        我的订单
+                    </button>
+            
             <h2>购物车</h2>
             {cartItems.length === 0 ? (
                         <p>您的购物车是空的。</p>
