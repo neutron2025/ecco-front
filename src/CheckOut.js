@@ -295,7 +295,7 @@ const Checkout = () => {
                     <AddressInfo onAddressSelect={handleAddressSelect} />
                     <button 
                         onClick={handleConfirmOrder }
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                        className="my-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                     >
                         确认支付
                     </button>

@@ -165,8 +165,14 @@ const AddressInfo = ({ onAddressSelect }) => {
                             <br />
                             {address.street}, {address.city}, {address.state} {address.zip_code}
                         </label>
-                        <button onClick={() => handleEditAddress(address)}>编辑</button>
-                        <button onClick={() => handleDeleteAddress(address.ID)}>删除</button>
+                        <button onClick={() => handleEditAddress(address)}
+                              className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded text-sm transition duration-300"
+
+                            >编辑</button>
+                        <button onClick={() => handleDeleteAddress(address.ID)}
+                             className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded text-sm transition duration-300"
+
+                            >删除</button>
                     </div>
                 ))
             )}
@@ -175,7 +181,11 @@ const AddressInfo = ({ onAddressSelect }) => {
                     setEditingAddressId(null);
                     setNewAddress({ phone: '', first_name: '', last_name: '', street: '', city: '', state: '', zip_code: '' });
                     setShowNewAddressForm(true);
-                }}>
+                }}
+               
+                 className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded text-sm transition duration-300"
+
+                >
                     添加新地址
                 </button>
             ) : (
@@ -187,14 +197,20 @@ const AddressInfo = ({ onAddressSelect }) => {
                     <input name="city" placeholder="城市" value={newAddress.city} onChange={handleNewAddressChange} />
                     <input name="state" placeholder="省/州" value={newAddress.state} onChange={handleNewAddressChange} />
                     <input name="zip_code" placeholder="邮编" value={newAddress.zip_code} onChange={handleNewAddressChange} />
-                    <button onClick={handleSaveAddress}>
+                    <button onClick={handleSaveAddress}
+                      className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition duration-300"
+
+                    >
                         {editingAddressId ? '更新地址' : '保存新地址'}
                     </button>
                     <button onClick={() => {
                         setShowNewAddressForm(false);
                         setEditingAddressId(null);
                         setNewAddress({ phone: '', first_name: '', last_name: '', street: '', city: '', state: '', zip_code: '' });
-                    }}>取消</button>
+                    }}
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300"
+
+                    >取消</button>
                 </div>
             )}
         </div>
