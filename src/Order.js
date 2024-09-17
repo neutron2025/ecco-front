@@ -45,17 +45,18 @@ const Orders = () => {
     if (isLoading) {
         return <div>加载中...</div>;
     }
+    const orders = ordersData.orders || [];
 
     return (
         <div>
             <Header isLoggedIn={isLoggedIn} setIsLoginModalOpen={() => {}} />
             <h2 className="text-2xl font-bold mb-4">我的订单</h2>
-            {ordersData.orders.length === 0 ? (
+            {orders.length === 0 ? (
                 <p>您没有任何订单。</p>
             ) : (
                 <>
                     <ul className="space-y-4">
-                        {ordersData.orders.map((order) => (
+                        {orders.orders.map((order) => (
                             <li key={order.id} className="border p-4 rounded-lg shadow">
                                 <p className="font-semibold">订单ID: {order.id}</p>
                                 <p>总价: ¥{order.total_price}</p>
