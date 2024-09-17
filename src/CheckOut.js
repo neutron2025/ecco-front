@@ -286,8 +286,8 @@ const Checkout = () => {
                         {cartItems.map((item, index) => (
                             <li key={index} className="mb-2">
                                 <span>产品ID: {item.ProductRef}</span>
-                                <span className="ml-2">尺寸: {item.Size || '未指定'}</span>
-                                <span className="ml-2">颜色: {item.Color || '未指定'}</span>
+                                <span className="ml-2">颜色: {item.Size || '未指定'}</span>
+                                <span className="ml-2">尺寸: {item.Color || '未指定'}</span>
                                 <span className="ml-2">数量: {item.Quantity}</span>
                             </li>
                         ))}
@@ -320,7 +320,8 @@ const Checkout = () => {
                     </button>
                 </div>
             ) : (
-                <p className="mt-4 text-lg text-gray-600">正在生成支付二维码，请稍候...</p>
+                // <p className="mt-4 text-lg text-gray-600">正在生成支付二维码，请稍候...</p>
+                <p className="mt-4 text-lg text-gray-600"> </p>
             )}
         </div>
     );

@@ -92,57 +92,68 @@ const LoginModal = ({ onClose  , setIsLoggedIn }) => {
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-gray-100 p-6 rounded-md shadow-lg max-w-md w-full">
             <h2 className="text-2xl font-semibold mb-4">
-              {isRegistering? 'Register' : 'Login'}
+              {/* {isRegistering? 'Register' : 'Login'} */}
+              {isRegistering? '注册' : '登录'}
             </h2>
             {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label className="block text-gray-700 font-medium mb-1">Username:</label>
+                {/* <label className="block text-gray-700 font-medium mb-1">Username:</label> */}
+                <label className="block text-gray-700 font-medium mb-1">用户名:</label>
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full border rounded-md p-2"
+                  placeholder="电话号码或邮箱"
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 font-medium mb-1">Password:</label>
+                {/* <label className="block text-gray-700 font-medium mb-1">Password:</label> */}
+                <label className="block text-gray-700 font-medium mb-1">密码:</label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full border rounded-md p-2"
+                  placeholder="密码"
                 />
               </div>
               <div className="flex justify-between">
         
                 <button type="submit" className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600">   
-                    {isRegistering? 'Register' : 'Login'} 
+                    {/* {isRegistering? 'Register' : 'Login'}  */}
+                    {isRegistering? '注册' : '登录'} 
                 </button>
                 <button type="button" onClick={onClose} className="border border-gray-400 rounded-md px-4 py-2 hover:bg-gray-200" >
-                  Cancel
+                  {/* Cancel */}
+                  取消
                 </button>
 
               </div>
               {!isRegistering && (
                 <p className="mt-4 text-gray-600">
-                  Don't have an account?{' '}
+                  {/* Don't have an account?{' '} */}
+                  没有账号？
                   <span
                     className="text-blue-500 cursor-pointer"
                     onClick={() => setIsRegistering(true)}
                   >
-                    Register here.
+                    {/* Register here. */}
+                    在此注册
                   </span>
                 </p>
               )}
               {isRegistering && (
                 <p className="mt-4 text-gray-600">
-                  Already have an account?{' '}
+                  {/* Already have an account?{' '} */}
+                  已有账号？
                   <span
                     className="text-blue-500 cursor-pointer"
                     onClick={() => setIsRegistering(false)}
                   >
-                    Login instead.
+                    {/* Login instead. */}
+                    在此登录
                   </span>
                 </p>
               )}

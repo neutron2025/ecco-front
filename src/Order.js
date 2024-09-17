@@ -10,6 +10,7 @@ const Orders = () => {
     const [isLoading, setIsLoading] = useState(true);
     const storedToken = localStorage.getItem('jwtToken');
     const navigate = useNavigate();
+    const [paidOrders, setPaidOrders] = useState([]);
 
     useEffect(() => {
         if (!isLoggedIn) {
@@ -30,10 +31,28 @@ const Orders = () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                setOrdersData(data);
+
+                // 检查data.orders是否存在
+                if (!data || !data.orders) {
+                    console.error('获取的订单数据无效');
+                    setOrdersData({ orders: [], total: 0, page: 1, limit: 10 });
+                    return;
+                }
+
+                // 直接使用从查询订单数据中获取的支付状态
+                const checkedOrders = data.orders.map((order) => {
+                    return { ...order, payment_status: order.payment_status || '未知' };
+                });
+
+                // 过滤出已支付的订单
+                const paidOrders = checkedOrders.filter(order => order.payment_status === '已支付');
+
+                setPaidOrders(paidOrders);
+                setOrdersData({ ...data, orders: paidOrders });
             } catch (error) {
                 console.error('获取订单信息时出错:', error);
-                handleLogout();
+                setOrdersData({ orders: [], total: 0, page: 1, limit: 10 });
+                // handleLogout();
             } finally {
                 setIsLoading(false);
             }
@@ -52,7 +71,7 @@ const Orders = () => {
             <Header isLoggedIn={isLoggedIn} setIsLoginModalOpen={() => {}} />
             <h2 className="text-2xl font-bold mb-4">我的订单</h2>
             {orders.length === 0 ? (
-                <p>您没有任何订单。</p>
+                <p>您没有任何有效订单。</p>
             ) : (
                 <>
                     <ul className="space-y-4">

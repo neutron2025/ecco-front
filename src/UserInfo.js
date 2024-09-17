@@ -60,6 +60,7 @@ const UserInfo = () => {
               setIsLoggedIn(true);
               await fetchUserData(token);
               await fetchCartItems(token);
+              await queryAutoOrders(token);
           } else {
               setIsLoggedIn(false);
               navigate('/');
@@ -153,6 +154,28 @@ const UserInfo = () => {
     navigate('/checkout');
     };
 
+    //自动验证订单
+    const queryAutoOrders = async (token) => {
+        try {
+            console.log("queryAutoOrders")
+            const response = await fetch(`${apiUrl}/api/query-auto`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (data.updated_orders && data.updated_orders.length > 0) {
+                // 如果有更新的订单，可能需要刷新用户数据以显示新的Pow值
+                await fetchUserData(token);
+            }
+        } catch (error) {
+            console.error('自动查询订单时出错:', error);
+        }
+    };
+
 
     if (isLoading) {
     return <div>加载中...</div>;
@@ -206,8 +229,8 @@ const UserInfo = () => {
                                 <li key={index} className="flex justify-between items-center mb-2">
                                     <div>
                                         <span>产品ID: {item.ProductRef}</span>
-                                        <span className="ml-2">尺寸: {item.Size || '未指定'}</span>
-                                        <span className="ml-2">颜色: {item.Color || '未指定'}</span>
+                                        <span className="ml-2">颜色: {item.Size || '未指定'}</span>
+                                        <span className="ml-2">尺寸: {item.Color || '未指定'}</span>
                                         <span className="ml-2">数量: {item.Quantity}</span>
                                     </div>
                                     <button 
