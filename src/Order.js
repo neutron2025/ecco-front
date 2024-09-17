@@ -56,7 +56,7 @@ const Orders = () => {
             ) : (
                 <>
                     <ul className="space-y-4">
-                        {orders.orders.map((order) => (
+                        {orders.map((order) => (
                             <li key={order.id} className="border p-4 rounded-lg shadow">
                                 <p className="font-semibold">订单ID: {order.id}</p>
                                 <p>总价: ¥{order.total_price}</p>
