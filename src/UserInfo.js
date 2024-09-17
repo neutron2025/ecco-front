@@ -208,9 +208,9 @@ const UserInfo = () => {
     
             <p className="flex items-center">
               <img src={`${process.env.PUBLIC_URL}/favicon.ico`} className="w-4 h-4 mr-2" />
-              Power: {userData.Pow}
+              Power: {userData.pow}
             </p>
-            <p>Power Address: {userData.PowAddress}</p>
+            <p>Power Address: {userData.powaddr || '未设置'}</p>
  
                        <button 
                         onClick={handleOrdersClick}
