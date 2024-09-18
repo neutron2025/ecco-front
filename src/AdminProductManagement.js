@@ -50,10 +50,32 @@ const AdminProductManagement = () => {
         throw new Error(errorData.error || '导出失败');
       }
 
-      // 获取文件名
-      const contentDisposition = response.headers.get('Content-Disposition');
-      const filenameMatch = contentDisposition && contentDisposition.match(/filename="?(.+)"?/i);
-      const filename = filenameMatch ? filenameMatch[1] : '订单详情导出.xlsx';
+
+            // 生成带有日期的文件名
+      // const currentDate = new Date();
+      // const formattedDate = currentDate.toISOString().slice(0,19).replace(/[-T:]/g, "").replace(/\..+/, '');
+      // const filename = `OrderExport_${formattedDate}.xlsx`;
+      // console.log(filename);
+
+          // 生成带有中国时区的当前日期和时间的文件名
+    const currentDate = new Date();
+    const chinaTime = new Intl.DateTimeFormat('zh-CN', {
+      timeZone: 'Asia/Shanghai',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }).format(currentDate);
+
+    // 将格式化的日期时间字符串转换为文件名格式
+    const formattedDate = chinaTime.replace(/[年月日 :]/g, '');
+    const filename = `OrderExport_${formattedDate}.xlsx`;
+
+    console.log('生成的文件名:', filename);
+    console.log('中国时间:', chinaTime);
             // 创建 Blob
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -73,6 +95,7 @@ const AdminProductManagement = () => {
       toast.success('订单导出成功');
     } catch (error) {
       console.error('导出订单时出错:', error);
+      alert(`导出订单失败: ${error.message}`);
       toast.error(`导出订单失败: ${error.message}`);
     } finally {
       setIsExporting(false);

@@ -256,29 +256,29 @@ const OrderManagement = () => {
 
  
     
-    const clearUnpaidOrders = async () => {
-        try {
-          const response = await fetch(`${apiUrl}/api/admin/clear-unpaid-orders`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
-            }
-          });
+    // const clearUnpaidOrders = async () => {
+    //     try {
+    //       const response = await fetch(`${apiUrl}/api/admin/clear-unpaid-orders`, {
+    //         method: 'POST',
+    //         headers: {
+    //           'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+    //         }
+    //       });
     
-          if (!response.ok) {
-            throw new Error('清理待支付订单失败');
-          }
+    //       if (!response.ok) {
+    //         throw new Error('清理待支付订单失败');
+    //       }
     
-          const result = await response.json();
-          alert(`清理待支付订单成功，共清理${result.deleted_count}个订单`);
+    //       const result = await response.json();
+    //       alert(`清理待支付订单成功，共清理${result.deleted_count}个订单`);
           
-          // 刷新订单列表
-          fetchOrders();
-        } catch (error) {
-          console.error('清理待支付订单出错:', error);
-          alert('清理待支付订单失败，请重试');
-        }
-      };
+    //       // 刷新订单列表
+    //       fetchOrders();
+    //     } catch (error) {
+    //       console.error('清理待支付订单出错:', error);
+    //       alert('清理待支付订单失败，请重试');
+    //     }
+    //   };
 
       const handleReturn = () => {
         navigate('/admin/management'); // 返回管理员面板路径，根据实际调整
@@ -303,11 +303,11 @@ const OrderManagement = () => {
           </select>
         </div>
         <div>
-          <button onClick={clearUnpaidOrders} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+          {/* <button onClick={clearUnpaidOrders} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
             清理待支付订单
           </button>
 
-          <div className="text-xs text-gray-500">超时4h以上</div>
+          <div className="text-xs text-gray-500">超时4h以上</div> */}
 
         </div>
       </div>
@@ -376,10 +376,10 @@ const OrderManagement = () => {
               <p>订单地址: 
               {addressDetails ? (
                 <span>
-                  {addressDetails.first_name} {addressDetails.last_name}, 
+                  {addressDetails.last_name} {addressDetails.first_name} , 
                   {addressDetails.phone}, 
-                  {addressDetails.street}, {addressDetails.city}, 
-                  {addressDetails.state} {addressDetails.zip_code}
+                  {addressDetails.state} {addressDetails.city} {addressDetails.street}, 
+                  邮编：{addressDetails.zip_code}
                 </span>
               ) : (
                 '加载中...'

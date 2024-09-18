@@ -191,12 +191,12 @@ const AddressInfo = ({ onAddressSelect }) => {
             ) : (
                 <div className="new-address-form">
                     <input name="last_name" placeholder="姓" value={newAddress.last_name} onChange={handleNewAddressChange} />
-                    <input name="first_name" placeholder="名" value={newAddress.first_name} onChange={handleNewAddressChange} />
+                    <input name="first_name" placeholder="名(选填)" value={newAddress.first_name} onChange={handleNewAddressChange} />
                     <input name="phone" placeholder="电话" value={newAddress.phone} onChange={handleNewAddressChange} />
-                    <input name="street" placeholder="街道地址" value={newAddress.street} onChange={handleNewAddressChange} />
-                    <input name="city" placeholder="城市" value={newAddress.city} onChange={handleNewAddressChange} />
                     <input name="state" placeholder="省/州" value={newAddress.state} onChange={handleNewAddressChange} />
-                    <input name="zip_code" placeholder="邮编" value={newAddress.zip_code} onChange={handleNewAddressChange} />
+                    <input name="city" placeholder="城市" value={newAddress.city} onChange={handleNewAddressChange} />
+                    <input name="street" placeholder="街道地址" value={newAddress.street} onChange={handleNewAddressChange} />
+                    <input name="zip_code" placeholder="邮编(选填)" value={newAddress.zip_code} onChange={handleNewAddressChange} />
                     <button onClick={handleSaveAddress}
                       className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition duration-300"
 
