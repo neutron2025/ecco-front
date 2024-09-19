@@ -92,6 +92,8 @@ const Orders = () => {
                                                 颜色: {item.color}, 
                                                 价格: ¥{item.price}, 
                                                 发货状态: {item.shipping_status}
+                                                快递单号: {item.deliverid || ' '}
+                                        
                                             </li>
                                         ))}
                                     </ul>
