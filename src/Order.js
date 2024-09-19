@@ -66,6 +66,18 @@ const Orders = () => {
     }
     const orders = ordersData.orders || [];
 
+    const getOrderStatusColor = (orders) => {
+        if (orders.payment_status === '已支付') {
+            const allItemsShipped = orders.items.every(item => item.shipping_status !== '待发货');
+            if (allItemsShipped) {
+                return 'bg-green-100'; // 已支付已发货
+            } else {
+                return 'bg-orange-200'; // 已支付待发货
+            }
+        }
+        return 'border-gray-300'; // 其他状态
+    };
+
     return (
         <div>
             <Header isLoggedIn={isLoggedIn} setIsLoginModalOpen={() => {}} />
@@ -76,7 +88,7 @@ const Orders = () => {
                 <>
                     <ul className="space-y-4">
                         {orders.map((order) => (
-                            <li key={order.id} className="border p-4 rounded-lg shadow">
+                            <li key={order.id} className={`border p-4 rounded-lg shadow ${getOrderStatusColor(order)}`}>
                                 <p className="font-semibold">订单ID: {order.id}</p>
                                 <p>总价: ¥{order.total_price}</p>
                                 <p>支付状态: {order.payment_status || '未知'}</p>
@@ -91,7 +103,7 @@ const Orders = () => {
                                                 尺寸: {item.size}, 
                                                 颜色: {item.color}, 
                                                 价格: ¥{item.price}, 
-                                                发货状态: {item.shipping_status}
+                                                发货状态: {item.shipping_status},
                                                 快递单号: {item.deliverid || ' '}
                                         
                                             </li>

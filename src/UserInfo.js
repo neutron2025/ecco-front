@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect,useContext  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
@@ -17,6 +15,8 @@ const UserInfo = () => {
     const loginTimeStamp = localStorage.getItem('loginTimeStamp');
     const [cartItems, setCartItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [newPowAddr, setNewPowAddr] = useState('');
+    const [isSettingPowAddr, setIsSettingPowAddr] = useState(false);
     
 
     const navigate = useNavigate();
@@ -195,6 +195,50 @@ const UserInfo = () => {
     const handleOrdersClick = () => {
         navigate('/orders');
     };
+    const handleWarrantsClick = () => {
+        if (userData && userData.powaddr) {
+            navigate('/warrants', { state: { powaddr: userData.powaddr } });
+        } else {
+            navigate('/warrants');
+        }
+    };
+
+
+
+    const handleSetPowAddr = async () => {
+        if (!newPowAddr) {
+            alert('请输入有效的权证地址');
+            return;
+        }
+        try {
+            const response = await fetch(`${apiUrl}/api/user/pow-addr`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${storedToken}`
+                },
+                body: JSON.stringify({ powaddr: newPowAddr })
+            });
+
+            if (!response.ok) {
+                throw new Error('设置权证地址失败');
+            }
+
+            const data = await response.json();
+            alert(data.message);
+            setIsSettingPowAddr(false);
+            // 更新用户数据以显示新的权证地址
+            await fetchUserData(storedToken);
+        } catch (error) {
+            console.error('设置权证地址时出错:', error);
+            alert('设置权证地址失败，请稍后重试');
+        }
+    };
+
+
+
+
+
     return (
 
       <div>
@@ -207,17 +251,61 @@ const UserInfo = () => {
             <h2>用户信息</h2>
     
             <p className="flex items-center">
-              <img src={`${process.env.PUBLIC_URL}/favicon.ico`} className="w-4 h-4 mr-2" />
+              <img src={`${process.env.PUBLIC_URL}/favicon.ico`} className="w-4 h-4 ml-2" />
               Power: {userData.pow}
             </p>
-            <p>Power Address: {userData.powaddr || '未设置'}</p>
- 
-                       <button 
-                        onClick={handleOrdersClick}
-                        className="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600"
+            {/* <p className=" ml-2 flex text-sm text-gray-500 items-center">钱包地址: {userData.powaddr || '未设置'}</p> */}
+            <div className="ml-2 flex flex-wrap items-center">
+                <p className="whitespace-nowrap">钱包地址:</p> 
+                <p className="text-sm text-gray-500 ml-1">
+                    {userData.powaddr || '未设置'}
+                </p>
+            </div>
+            {!isSettingPowAddr ? (
+                    <button 
+                        onClick={() => setIsSettingPowAddr(true)}
+                        className="ml-4 bg-blue-500 text-white px-2 py-1 rounded text-sm hover:bg-blue-600"
                     >
-                        我的订单
+                        设置地址
                     </button>
+                ) : (
+                    <div className="ml-2">
+                        <input 
+                            type="text" 
+                            value={newPowAddr}
+                            onChange={(e) => setNewPowAddr(e.target.value)}
+                            placeholder="权证地址,即是您的Solana区块链钱包地址"
+                            className="border rounded px-1 py-1 mr-1 text-sm w-96 flex-grow"
+                        />
+                        <button 
+                            onClick={handleSetPowAddr}
+                            className="bg-green-500 text-white px-2 py-1 rounded text-sm hover:bg-green-600 mr-2"
+                        >
+                            确认
+                        </button>
+                        <button 
+                            onClick={() => setIsSettingPowAddr(false)}
+                            className="bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-600"
+                        >
+                            取消
+                        </button>
+                    </div>
+                )}
+
+
+ 
+                <button 
+                onClick={handleOrdersClick}
+                className="bg-blue-500 text-white ml-16 px-4 py-2 rounded my-4 hover:bg-blue-600"
+            >
+                我的订单
+            </button>
+                <button 
+                onClick={handleWarrantsClick}
+                className="bg-blue-500 text-white mx-4 px-4 py-2 rounded my-4 hover:bg-blue-600"
+            >
+                我的权证
+            </button>
             
             <h2>购物车</h2>
             {cartItems.length === 0 ? (
@@ -255,7 +343,9 @@ const UserInfo = () => {
         ) : (
           <div>Please log in to view user information.</div>
         )}
+
       </div>
+      
 
     );
 };

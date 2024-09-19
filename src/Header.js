@@ -23,8 +23,8 @@ const Header = () => {
   };
 
      // 检查当前是否在产品详情页面
-  const isProductDetailPage = location.pathname.startsWith('/product/') || location.pathname === '/userinfo'|| location.pathname === '/orders';
-  const isOrdersPage = location.pathname === '/orders';
+  const isProductDetailPage = location.pathname.startsWith('/product/') || location.pathname === '/userinfo'|| location.pathname === '/orders'||location.pathname === '/warrants';
+  const isOrdersPage = location.pathname === '/orders'||location.pathname === '/warrants';
   const isUserInfoPage = location.pathname === '/userinfo';
 
   return (

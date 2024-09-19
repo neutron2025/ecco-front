@@ -200,8 +200,8 @@ const {
           <div className="product-info mt-2 flex flex-row">
             <div className="product-price mr-4 text-2xl font-semibold">￥{price}</div>
             <div className="product-info-left w-4/5  md:w-1/2 text-left">
-              <h2 className="text-xl font-bold">{name}</h2>
-              <p className="text-gray-700">{description}</p>
+              <h2 className="text-gray-700 text-xl font-bold">{name}</h2>
+              <p className="text-gray-600">{description}</p>
             </div>
           </div>
           <div className="size-selection mb-4">
