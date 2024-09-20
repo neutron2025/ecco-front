@@ -6,6 +6,9 @@ const UserManagement = () => {
     const [currentPage,setCurrentPage] = useState(1)
     const [usersPerPage] = useState(20);
     const [totalUsersCount, setTotalUsersCount] = useState(0);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingUser, setEditingUser] = useState(null);
+    const [newPowValue, setNewPowValue] = useState('');
 
 
     const navigate = useNavigate();
@@ -76,9 +79,41 @@ const UserManagement = () => {
 
 
 
-  const handleEdit = (userId) => {
-    console.log(`Edit user with id ${userId}`);
+  const handleEdit = (user) => {
+    setEditingUser(user);
+    setNewPowValue(user.pow);
+    setIsEditModalOpen(true);
+    console.log(`Edit user with id ${user}`);
   };
+
+  const handleUpdatePow = async () => {
+    try {
+        const response = await fetch(`${apiUrl}/api/admin/user/update-pow`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            },
+            body: JSON.stringify({
+                user_id: editingUser.id,
+                pow: parseFloat(newPowValue)
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || '更新失败');
+        }
+
+        // 更新成功后，重新获取用户列表
+        await fetchUsers();
+        setIsEditModalOpen(false);
+        alert('更新成功');
+    } catch (error) {
+        alert('更新失败: ' + error.message);
+    }
+};
+
 
   const handleDelete = async (userId) => {
     console.log(`Delete user with id ${userId}`);
@@ -201,11 +236,11 @@ const UserManagement = () => {
               <td className="border px-4 py-2">{user.firstName}</td>
               <td className="border px-4 py-2">{user.lastName}</td>
               <td className="border px-4 py-2">{user.pow}</td>
-              <td className="border px-4 py-2">{user.powAddress}</td>
+              <td className="border px-4 py-2">{user.powaddr}</td>
               <td className="border px-4 py-2">{user.created_at.toLocaleString()}</td>
               <td className="border px-4 py-2">{user.id.toLocaleString()}</td>
               <td className="border px-4 py-2 flex space-x-2">
-                <button onClick={() => handleEdit(user.id)}>
+                <button onClick={() => handleEdit(user)}>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
@@ -220,6 +255,41 @@ const UserManagement = () => {
           ))}
         </tbody>
       </table>
+
+       {/* 编辑模态框 */}
+       {isEditModalOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-white p-6 rounded-lg">
+                        <h2 className="text-xl mb-4">编辑用户 Power</h2>
+                        <input
+                            type="number"
+                            value={newPowValue}
+                            onChange={(e) => setNewPowValue(e.target.value)}
+                            className="border rounded px-2 py-1 mb-4 w-full"
+                        />
+                        <div className="flex justify-end">
+                            <button 
+                                onClick={handleUpdatePow}
+                                className="bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-600"
+                            >
+                                确认
+                            </button>
+                            <button 
+                                onClick={() => setIsEditModalOpen(false)}
+                                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                            >
+                                取消
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
+
+
+
+
 
       <div className="pagination">
   {[...Array(Math.ceil(totalUsersCount / usersPerPage))].map((_, index) => (

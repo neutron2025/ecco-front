@@ -83,7 +83,7 @@ const Orders = () => {
             <Header isLoggedIn={isLoggedIn} setIsLoginModalOpen={() => {}} />
             <h2 className="text-2xl font-bold mb-4">我的订单</h2>
             {orders.length === 0 ? (
-                <p>您没有任何有效订单。</p>
+                <p>此处只显示已支付订单，您没有任何有效订单。</p>
             ) : (
                 <>
                     <ul className="space-y-4">

@@ -248,12 +248,12 @@ const UserInfo = () => {
                 },
                 body: JSON.stringify({ amount: withdrawAmount })
             });
+            const data = await response.json();
 
             if (!response.ok) {
-                throw new Error('提现请求失败');
+                throw new Error(data.message);
             }
 
-            const data = await response.json();
             alert('提现成功: ' + data.message);
             setIsWithdrawModalOpen(false);
             // 刷新用户数据
@@ -275,8 +275,8 @@ const UserInfo = () => {
             <h2>用户信息</h2>
     
             <p className="flex items-center">
-              <img src={`${process.env.PUBLIC_URL}/favicon.ico`} className="w-4 h-4 ml-2" />
-              Power: {userData.pow}
+              <img src={`${process.env.PUBLIC_URL}/favicon.ico`} className="w-4 h-4 ml-2 mr-1" />
+              (权证)Power: {userData.pow}
               <button 
                     // onClick={() => setIsWithdrawModalOpen(true)}
                     onClick={() => {
