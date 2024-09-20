@@ -17,6 +17,9 @@ const UserInfo = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [newPowAddr, setNewPowAddr] = useState('');
     const [isSettingPowAddr, setIsSettingPowAddr] = useState(false);
+
+    const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+    const [withdrawAmount, setWithdrawAmount] = useState(null);
     
 
     const navigate = useNavigate();
@@ -235,7 +238,30 @@ const UserInfo = () => {
         }
     };
 
+    const handleWithdraw = async () => {
+        try {
+            const response = await fetch(`${apiUrl}/api/transfer-scl`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${storedToken}`
+                },
+                body: JSON.stringify({ amount: withdrawAmount })
+            });
 
+            if (!response.ok) {
+                throw new Error('提现请求失败');
+            }
+
+            const data = await response.json();
+            alert('提现成功: ' + data.message);
+            setIsWithdrawModalOpen(false);
+            // 刷新用户数据
+            await fetchUserData(storedToken);
+        } catch (error) {
+            alert('提现失败: ' + error.message);
+        }
+    };
 
 
 
@@ -246,14 +272,66 @@ const UserInfo = () => {
           <>
             <Header isLoggedIn={isLoggedIn} setIsLoginModalOpen={() => {}}  />
 
-
-
             <h2>用户信息</h2>
     
             <p className="flex items-center">
               <img src={`${process.env.PUBLIC_URL}/favicon.ico`} className="w-4 h-4 ml-2" />
               Power: {userData.pow}
+              <button 
+                    // onClick={() => setIsWithdrawModalOpen(true)}
+                    onClick={() => {
+                        if (!userData.powaddr) {
+                            alert('请先设置钱包地址');
+                        } else {
+                            setIsWithdrawModalOpen(true);
+                        }
+                    }}
+                    className="ml-4 bg-blue-500 text-white px-2 py-1 rounded text-sm hover:bg-blue-600"
+                >
+                    提现到钱包
+                </button>
+
             </p>
+                        {/* 提现模态框 */}
+                        {isWithdrawModalOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-white p-6 rounded-lg">
+                        <h2 className="text-xl mb-4">提取权证到钱包</h2>
+                        <p className="text-xs text-gray-500 mb-4 break-all leading-tight">
+                            {userData.powaddr || '未设置'}
+                        </p>
+    
+                        <input
+                            type="number"
+                            placeholder="每次提现数量最少218个"
+                            value={withdrawAmount}
+                            onChange={(e) => setWithdrawAmount(parseFloat(e.target.value))}
+                            className="border rounded px-2 py-1 mb-4 w-full"
+                            required
+                        />
+                        <div className="flex justify-end">
+                            <button 
+                                onClick={handleWithdraw}
+                                className="bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-600"
+                            >
+                                确认
+                            </button>
+                            <button 
+                                onClick={() => setIsWithdrawModalOpen(false)}
+                                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                            >
+                                取消
+                            </button>
+                            </div>
+                    </div>
+                </div>
+            )}
+
+
+
+
+
+
             {/* <p className=" ml-2 flex text-sm text-gray-500 items-center">钱包地址: {userData.powaddr || '未设置'}</p> */}
             <div className="ml-2 flex flex-wrap items-center">
                 <p className="whitespace-nowrap">钱包地址:</p> 
@@ -269,7 +347,7 @@ const UserInfo = () => {
                         设置地址
                     </button>
                 ) : (
-                    <div className="ml-2">
+                    <div className="ml-1">
                         <input 
                             type="text" 
                             value={newPowAddr}
