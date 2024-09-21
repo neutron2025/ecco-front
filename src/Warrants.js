@@ -306,11 +306,11 @@ const Warrants = () => {
                 <div className="flex justify-between items-center mb-6">
 
                 </div>
-                {warrant.length === 0 ? (
+                {warrant.length === 0 ||warrant.filter(w => w.payment_status === '已支付').length === 0 ? (
                     <p>您还没有任何权证。</p>
                 ) : (
                     <ul className="space-y-4">
-                        {warrant.map((warrant) => (
+                        {warrant.filter(w => w.payment_status === '已支付').map((warrant) => (
                             <li key={warrant.id} className="bg-white shadow rounded-lg p-4">
                                 <div className="flex justify-between items-center">
                                     <h2 className="text-xl font-semibold">可赎权证：{warrant.is_redeemed ? '0' : warrant.total_price}</h2>
@@ -323,7 +323,7 @@ const Warrants = () => {
                                <div className="flex justify-between text-sm items-center text-gray-600">
                                 <p>发行日期: {new Date(warrant.created_at).toLocaleDateString()}</p>
                                 <p>到期日期: {calculateExpiryDate(warrant)}</p>
-                            </div>
+                                </div>
 
                                 <div className="flex justify-between items-center mt-2">
                                     <div className="flex items-center text-sm text-gray-600">
@@ -351,7 +351,8 @@ const Warrants = () => {
  {/* ... 权证列表 ... */}
  <div className="mt-4 flex justify-between items-center">
                     <div>
-                        <p>总权证数: {warrantsData.total}</p>
+                        {/* <p>总权证数: {warrantsData.total}</p> */}
+                        <p>总权证数: {warrant.filter(w => w.payment_status === '已支付').length}</p>
                         <p>当前页: {warrantsData.page}</p>
                         <p>每页显示: {warrantsData.limit}</p>
                     </div>
