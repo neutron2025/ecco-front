@@ -200,7 +200,7 @@ const UserInfo = () => {
     };
     const handleWarrantsClick = () => {
         if (userData && userData.powaddr) {
-            navigate('/warrants', { state: { powaddr: userData.powaddr } });
+            navigate('/warrants', { state: { powaddr: userData.powaddr ,pow:userData.pow } });
         } else {
             navigate('/warrants');
         }

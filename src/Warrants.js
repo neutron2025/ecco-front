@@ -10,7 +10,7 @@ const Warrants = () => {
     const storedToken = localStorage.getItem('jwtToken');
     const location = useLocation();
     const powaddr = location.state?.powaddr || '';
-
+    const pow = location.state?.pow || 0;
     const [isRedeemModalOpen, setIsRedeemModalOpen] = useState(false);
     const [redeemingWarrant, setRedeemingWarrant] = useState(null);
     const [transactionHash, setTransactionHash] = useState('');
@@ -129,6 +129,7 @@ const Warrants = () => {
         setIsRedeemModalOpen(true);
         setRedeemingWarrant({
             id: warrant.id,
+            total_price: warrant.total_price,
             redeemValue,
             message: `赎回后此权证单作废，共获得 ¥${redeemValue}。是否继续？`,
             isError: false
@@ -149,6 +150,11 @@ const Warrants = () => {
             // 如果没有使用 toast，可以使用 alert 或设置一个错误状态来显示错误信息
             alert('请填写姓名和支付宝账号');
             return; // 终止函数执行
+        }
+            // 验证 POW 数量
+        if (redeemingWarrant.total_price > pow) {
+            alert(`您的 Pow 数量不足，最少需要 ${redeemingWarrant.total_price} Pow 才能进行赎回操作`);
+            return;
         }
         try {
             const response = await fetch(`${apiUrl}/api/redemption-order`, {
@@ -237,12 +243,6 @@ const Warrants = () => {
             const data = await response.json();
             console.log('链上赎回成功:', data);
             
-            // 更新本地状态
-            // setWarrants(prevWarrants => 
-            //     prevWarrants.map(w => 
-            //         w.id === redeemingWarrant.id ? { ...w, is_redeemed: true } : w
-            //     )
-            // );
     
             // 关闭模态框和重置状态
             setIsConfirmModalOpen(false);
@@ -306,10 +306,12 @@ const Warrants = () => {
                 <div className="flex justify-between items-center mb-6">
 
                 </div>
-                {warrant.length === 0 ||warrant.filter(w => w.payment_status === '已支付').length === 0 ? (
+               
+                {warrant.length === 0 ||warrant.filter(w => w.payment_status === '已支付').length === 0 ? (  
                     <p>您还没有任何权证。</p>
                 ) : (
                     <ul className="space-y-4">
+                        {/* .filter(w => w.payment_status === '已支付') */}
                         {warrant.filter(w => w.payment_status === '已支付').map((warrant) => (
                             <li key={warrant.id} className="bg-white shadow rounded-lg p-4">
                                 <div className="flex justify-between items-center">
