@@ -42,7 +42,7 @@ const App = () => {
       if (product.mainImage) {
         return (
           <>
-          <div className='lg:w-1/3 md:w-1/2  sm:w-full p-4 rounded-md' key={product.ID || index}>
+          {/* <div className='lg:w-1/3 md:w-1/2  sm:w-full p-4 rounded-md' key={product.ID || index}>
             <Link to={`/product/${product.ID}`}>
               <img
                 src={`${imageUrl}/${product.mainImage.url}`}
@@ -56,22 +56,22 @@ const App = () => {
                 <h1 className="ml-2 text-blue-500 text-lg">{product.price}</h1>
               </div>
             </Link>
-          </div>
+          </div> */}
 
-{/* <div className='w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/4 p-2 sm:p-4' key={product.ID || index}>
+<div className='w-1/2 sm:w-1/2 md:w-1/3 lg:w-1/4 p-2 sm:p-1 md:p-2 lg:p-4' key={product.ID || index}>
   <Link to={`/product/${product.ID}`}>
     <img
       src={`${imageUrl}/${product.mainImage.url}`}
       alt={`Main Product Image for ${product.name}`}
       className="w-full h-auto rounded-md border"
     />
-    <h2 className="mt-2 text-sm sm:text-base font-semibold text-gray-800 truncate">{product.name}</h2>
+    <h2 className="mt-2 text-sm sm:text-base font-semibold text-gray-500 truncate">{product.name}</h2>
     <div className="flex items-center justify-between mt-1">
       <p className='text-xs sm:text-sm text-gray-600 line-clamp-2 flex-1 mr-2'>{product.description}</p>
       <span className="text-blue-600 text-sm sm:text-base font-bold whitespace-nowrap">{product.price}</span>
     </div>
   </Link>
-</div> */}
+</div>
           
           </>
         );
@@ -94,7 +94,7 @@ const App = () => {
             />
           )}
           <Routes>
-            <Route path="/" element={<div className="flex flex-wrap mx-4 md:mx-16 p-1 md:px-8">{filteredProducts}</div>} />
+            <Route path="/" element={<div className="flex flex-wrap mx-2 md:mx-16 p-1 md:px-8">{filteredProducts}</div>} />
 
             <Route 
               path="/userinfo"
