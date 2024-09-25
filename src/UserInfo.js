@@ -290,6 +290,12 @@ const UserInfo = () => {
                 >
                     提现到钱包
                 </button>
+                <button 
+                onClick={() => window.open('https://shengchan.link/', '_blank')}
+                className="ml-2 bg-gray-200 text-gray-800 px-2 py-1 rounded text-sm hover:bg-gray-300"
+                >
+                    白皮书
+                </button>
 
             </p>
                         {/* 提现模态框 */}
