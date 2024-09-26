@@ -199,7 +199,10 @@ const UserInfo = () => {
         navigate('/orders');
     };
     const handleWarrantsClick = () => {
-        if (userData && userData.powaddr) {
+        console.log("userData:"+userData.pow)
+        if (userData) {
+            console.log(userData.pow)
+            console.log(userData.powaddr)
             navigate('/warrants', { state: { powaddr: userData.powaddr ,pow:userData.pow } });
         } else {
             navigate('/warrants');

@@ -168,6 +168,9 @@ const AdminProductManagement = () => {
                 <li className="mb-2">Update Order Status</li>
                 <li className="mb-2">Track Order</li>
               </ul>
+              <div className='bg-cyan-400 rounded-lg h-16  shadow-md hover:shadow-lg cursor-pointer flex justify-center items-center text-center' onClick={() => navigate('/admin/redeem-management')}>
+                <h2 className="text-xl font-semibold mb-4 mt-4 cursor-pointer text-center" >Redeem Management</h2>
+              </div>
             </div>
           </div>
           <div className="fixed top-4 right-4">

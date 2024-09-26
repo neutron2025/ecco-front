@@ -115,6 +115,7 @@ const Warrants = () => {
             setRedeemingWarrant({
                 id: warrant.id,
                 message: '请先设置权证钱包地址后再进行赎回操作。',
+                total_price: warrant.total_price,
                 isError: true
             });
             return;
@@ -152,6 +153,8 @@ const Warrants = () => {
             return; // 终止函数执行
         }
             // 验证 POW 数量
+            console.log(redeemingWarrant.total_price);
+            console.log(pow);
         if (redeemingWarrant.total_price > pow) {
             alert(`您的 Pow 数量不足，最少需要 ${redeemingWarrant.total_price} Pow 才能进行赎回操作`);
             return;
@@ -428,6 +431,13 @@ const Warrants = () => {
                         ) : (
                             <div className="alipay-redeem-form">
                                 <h2 className="text-xl font-bold mb-4">支付宝赎回</h2>
+                                <div className="flex items-start mb-4">
+                                <span className="text-yellow-500 mr-1" style={{ fontSize: '1em' }}>&#9888;</span>
+                                <p className="text-xs text-gray-500">
+                                    支付宝按可赎数量赎回订单，提交后不可更改，晚上8点统一到账
+                                </p>
+                                </div>
+                                
                                 <p className="mb-4">请确认你的姓名和支付宝账号：</p>
                                 <input
                                     type="text"
@@ -519,6 +529,13 @@ const Warrants = () => {
             ) : (
                 <div className="alipay-redeem-form">
                                 <h2 className="text-xl font-bold mb-4">支付宝赎回</h2>
+                                <div className="flex items-start mb-4">
+                                <span className="text-yellow-500 mr-1" style={{ fontSize: '1em' }}>&#9888;</span>
+                                <p className="text-xs text-gray-500">
+                                    支付宝按可赎数量赎回订单，提交后不可更改，晚上8点统一到账
+                                </p>
+                                </div>
+                                {/* <p className=" text-xs text-gray-500 mb-4">支付宝按可赎数量赎回订单，提交后不可更改，晚上8点统一到账</p> */}
                                 <p className="mb-4">请确认你的姓名和支付宝账号：</p>
                                 <input
                                     type="text"

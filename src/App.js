@@ -7,6 +7,7 @@ import UserInfo from './UserInfo';
 import { AuthProvider, AuthContext } from './AuthContext';
 import ProductDetail from './ProductDetail';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import RedeemManagement from './RedeemManagement';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 const imageUrl = process.env.REACT_APP_IMAGE_URL;
@@ -117,6 +118,10 @@ const App = () => {
           <Route 
             path="/userinfo"
             element={<UserInfo isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} handleLogout={handleLogout} />}
+          />
+          <Route 
+            path="/admin/redeem-management"
+            element={<RedeemManagement />}
           />
         </Routes>
       </main>

@@ -27,6 +27,7 @@ import OrderManagement from './OrderManagement';
 import { AuthProvider } from './AuthContext'; // 导入 AuthProvider
 import Orders from './Order';
 import Warrants from './Warrants';
+import RedeemManagement from './RedeemManagement';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -47,6 +48,7 @@ root.render(
           <Route path="/admin/user-management" element={<UserManagement />} />
           <Route path="/admin/product-management" element={<ProductManagement />} />
           <Route path="/admin/order-management" element={<OrderManagement />} />
+          <Route path="/admin/redeem-management" element={<RedeemManagement />} />
           <Route path="/admin/add-product" element={<AddProduct />} /> // 添加产品路由
           <Route path="/admin/edit-product/:id" element={<EditProduct />} />
           <Route path="/orders" element={<Orders />} />
