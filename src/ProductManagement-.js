@@ -167,49 +167,6 @@ const ProductManagement = () => {
       };
   
 
-// 修改分页逻辑
-const renderPagination = () => {
-    const pageCount = Math.ceil(totalProductsCount / productsPerPage);
-    if (isNaN(pageCount) || pageCount <= 0) return null; // 如果pageCount无效，不显示分页
-
-    const maxPageButtons = 5; // 最多显示5个页码按钮
-    const pageNumbers = [];
-    let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
-    let endPage = Math.min(pageCount, startPage + maxPageButtons - 1);
-
-    if (endPage - startPage + 1 < maxPageButtons) {
-      startPage = Math.max(1, endPage - maxPageButtons + 1);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      pageNumbers.push(
-        <button
-          key={i}
-          onClick={() => paginate(i)}
-          className={`px-3 py-1 mx-1 rounded ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
-        >
-          {i}
-        </button>
-      );
-    }
-
-    return (
-      <div className="pagination">
-        {currentPage > 1 && (
-          <button onClick={() => paginate(currentPage - 1)} className="px-3 py-1 mx-1 rounded bg-gray-300">
-            上一页
-          </button>
-        )}
-        {pageNumbers}
-        {currentPage < pageCount && (
-          <button onClick={() => paginate(currentPage + 1)} className="px-3 py-1 mx-1 rounded bg-gray-300">
-            下一页
-          </button>
-        )}
-      </div>
-    );
-  };
-
 return (
     <div>
         <h1>Product Management Page</h1>
@@ -254,7 +211,7 @@ return (
                         <td className="border px-4 py-2">
                             {product.images && product.images.length > 0 && (
                                 <img
-                                    src={`${baseImageUrl}${product.images.find(image => image.main_image)?.url}`}
+                                    src={`${baseImageUrl}${product.images.find(image => image.main_image).url}`}
                                     alt={product.name}
                                     className="w-16 h-16 object-cover"
                                 />
@@ -285,8 +242,26 @@ return (
 
             </tbody>
         </table>
-        {/* 替换原来的分页部分 */}
-        {renderPagination()}
+        {/* <div className="pagination">
+            {[...Array(Math.ceil(totalProductsCount/ productsPerPage))].map((_, index) => (
+                <button key={index} onClick={() => paginate(index + 1)}>
+                    {index + 1}
+                </button>
+            ))}
+        </div> */}
+
+<div className="pagination">
+  {[...Array(Math.ceil(totalProductsCount / productsPerPage))].map((_, index) => (
+    <button
+      key={index}
+      onClick={() => {paginate(index+1)}}
+      className={`px-3 py-1 mx-1 rounded ${index + 1 === currentPage? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+    >
+      {index + 1}
+    </button>
+  ))}
+</div>
+
     </div>
 );
 }

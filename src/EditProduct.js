@@ -1,375 +1,125 @@
-import React,{useState,useEffect} from 'react';
-import { useNavigate,useParams   } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 const apiUrl = process.env.REACT_APP_API_URL;
+
 const EditProduct = () => {
-
   const navigate = useNavigate();
+  const { id } = useParams();
   const [errorMessage, setErrorMessage] = useState('');
-
-  useEffect(() => {
-      // 检查登录状态
-      const storedToken = localStorage.getItem('adminToken');
-      if (!storedToken) {
-        navigate('/admin-x-page'); // 如果没有 token，重定向到登录页面
-      }
-  
-      // 检查 Token 是否过期
-      const loginTimeStamp = localStorage.getItem('adminloginTimeStamp');
-      if (storedToken && loginTimeStamp) {
-        const currentTime = new Date().getTime();
-        const elapsedTime = currentTime - parseInt(loginTimeStamp);
-        if (elapsedTime >= 30 * 60 * 1000) {
-          localStorage.clear();
-          navigate('/admin-x-page'); // 跳转到登录页面
-        }
-      }
-    }, [navigate]);
-
- 
-    const { id } = useParams();
-    const [product, setProduct] = useState(null);
-    const [productName, setProductName] = useState('');
-    const [description, setDescription] = useState('');
-    const [price, setPrice] = useState('');
-    const [mainImage, setMainImage] = useState(null);
-    const [colorVariantImages, setColorVariantImages] = useState([]);
-    const [introductoryImages, setIntroductoryImages] = useState([]);
-    const [sizeColors, setSizeColors] = useState([]);
-
-    useEffect(() => {
-        // 获取产品数据
-        const fetchProduct = async () => {
-          try {
-            const token = localStorage.getItem('adminToken');
-            const response = await fetch(`${apiUrl}/api/admin/product/${id}`,{    //   http://127.0.0.1:3000/admin/product/66cc0a0987f0bb7010ace40e
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            if (!response.ok) {
-              throw new Error(`Failed to fetch product: ${response.status}`);
-            }
-            const data = await response.json();
-            setProduct(data);
-
-            // 初始化表单状态
-            setProductName(data.name);
-            setDescription(data.description);
-            setPrice(data.price);
-            // 设置尺寸和颜色信息
-            setSizeColors(data.size_colors);
-            // 设置图片
-            const images = data.images.map(image => ({
-              file: null, // 用于上传的文件对象
-              url: image.url, // 图片URL
-              type: image.type, // 图片类型
-              color: image.color, // 图片颜色
-              main_image: image.main_image // 是否为主图
-            }));
-            setColorVariantImages(images.filter(img => img.type === 'color_variant'));
-            setIntroductoryImages(images.filter(img => img.type === 'introductory'));
-            setMainImage(images.find(img => img.main_image).file); // 主图文件对象
-          } catch (error) {
-            console.error('Error fetching product:', error);
-            toast.error('Failed to fetch product');
-          }
-        };
-    
-        fetchProduct();
-      }, [id, navigate]);
-  
-  
-
-
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      const formData = new FormData();
-      formData.append('name', productName);
-      formData.append('description', description);
-      formData.append('price', price);
-      if (mainImage) {
-        formData.append('main_image', mainImage);
-      }
-      colorVariantImages.forEach((image) => formData.append('color_variant_images', image));
-      introductoryImages.forEach((image) => formData.append('introductory_images', image));
-
-
-  // 添加尺寸颜色数据
-  sizeColors.forEach((sizeColor, index) => {
-    formData.append(`size_colors[${index}][size]`, sizeColor.size);
-    sizeColor.colors.forEach((color, colorIndex) => {
-      formData.append(`size_colors[${index}][colors][]`, color); // 使用索引为颜色创建数组
-    });
+  const [product, setProduct] = useState({
+    name: '',
+    description: '',
+    price: ''
   });
 
-  console.log('Form data:', formData);
-  console.log(formData.size_colors)
- 
-      const adminToken = localStorage.getItem('adminToken');
+  useEffect(() => {
+    const fetchProduct = async () => {
       try {
-        const response = await fetch(`${apiUrl}/api/admin/addproduct`, {
-          method: 'POST',
-          body: formData,
+        const token = localStorage.getItem('adminToken');
+        const response = await fetch(`${apiUrl}/api/admin/product/${id}`, {
           headers: {
-            Authorization: `Bearer ${adminToken}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         });
-        if (response.ok) {
-          toast.success(response.message)
-          navigate('/admin/product-management');
-        } else {
-          console.error('Failed to add product ---');
-          const errorData = await response.json();
-            setErrorMessage(errorData.error || 'Failed to add product');
-            toast.error(errorData.error || 'Failed to add product');
+        if (!response.ok) {
+          throw new Error(`获取产品失败: ${response.status}`);
         }
+        const data = await response.json();
+        setProduct({
+          name: data.name,
+          description: data.description,
+          price: data.price
+        });
       } catch (error) {
-        setErrorMessage("error")
-        console.error('Error submitting product:', error);
+        console.error('获取产品时出错:', error);
+        toast.error('获取产品失败');
       }
     };
-  
-    const handleMainImageChange = (e) => {
-      const file = e.target.files[0];
-      setMainImage(file);
+
+    fetchProduct();
+  }, [id]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const updatedData = {
+      name: product.name,
+      description: product.description,
+      price: parseFloat(product.price)
     };
-  
-    const handleColorVariantImagesChange = (e) => {
-      const files = Array.from(e.target.files);
-      setColorVariantImages(files);
-    };
-  
-    const handleIntroductoryImagesChange = (e) => {
-      const files = Array.from(e.target.files);
-      setIntroductoryImages(files);
-    };
-  
 
-    const removeMainImage = () => {
-        setMainImage(null);
-      };
-    
-      const removeColorVariantImage = (index) => {
-        const newColorVariantImages = [...colorVariantImages];
-        newColorVariantImages.splice(index, 1);
-        setColorVariantImages(newColorVariantImages);
-      };
-    
-      const removeIntroductoryImage = (index) => {
-        const newIntroductoryImages = [...introductoryImages];
-        newIntroductoryImages.splice(index, 1);
-        setIntroductoryImages(newIntroductoryImages);
-      };
-
-
-
-
-
-  
- // 添加新尺寸和颜色集合
-const addSizeColor = () => {
-    setSizeColors(prev => [...prev, { size: '', colors: [''] }]);
+    const adminToken = localStorage.getItem('adminToken');
+    try {
+      const response = await fetch(`${apiUrl}/api/admin/editproduct/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${adminToken}`,
+        },
+        body: JSON.stringify(updatedData),
+      });
+      if (response.ok) {
+        toast.success('产品更新成功');
+        navigate('/admin/product-management');
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.error || '更新产品失败');
+        toast.error(errorData.error || '更新产品失败');
+      }
+    } catch (error) {
+      setErrorMessage("更新产品时出错");
+      console.error('更新产品时出错:', error);
+    }
   };
 
-  // 定义 removeSizeColor 函数
-const removeSizeColor = (indexToRemove) => {
-    const filteredSizeColors = sizeColors.filter((_, index) => index !== indexToRemove);
-    setSizeColors(filteredSizeColors);
-  };
-   // 定义 handleColorChange 函数
-const handleColorChange = (sizeIndex, colorIndex, colorValue) => {
-    const newSizeColors = [...sizeColors];
-    const colors = newSizeColors[sizeIndex].colors;
-    colors[colorIndex] = colorValue;
-    newSizeColors[sizeIndex].colors = colors;
-    setSizeColors(newSizeColors);
-  };
-    // 定义 handleAddColor 函数
-    const handleAddColor = (sizeIndex) => {
-        const newSizeColors = [...sizeColors];
-        const newColors = newSizeColors[sizeIndex].colors;
-        newColors.push(''); // 添加一个空字符串作为新颜色的占位符
-        newSizeColors[sizeIndex].colors = newColors;
-        setSizeColors(newSizeColors);
-      };
-
-        // 定义 handleRemoveColor 函数
-  const handleRemoveColor = (sizeIndex, colorIndex) => {
-    const newSizeColors = [...sizeColors];
-    const colors = newSizeColors[sizeIndex].colors;
-    colors.splice(colorIndex, 1); // 移除指定索引的颜色
-    newSizeColors[sizeIndex].colors = colors;
-    setSizeColors(newSizeColors);
-  };
-  const handleSizeColorChange = (index, field, value) => {
-    const newSizeColors = [...sizeColors];
-    newSizeColors[index][field] = value;
-    setSizeColors(newSizeColors);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProduct(prev => ({ ...prev, [name]: value }));
   };
 
-
-      return (
-        // <div className="p-8 bg-gray-100 min-h-screen">
-        //   <h1 className="text-3xl font-bold mb-6">Add Product</h1>
-        //   {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
-        //   <form onSubmit={handleSubmit} className="space-y-4">
-        //     <div className="flex">
-        //       <div className="w-1/3">
-        //         <div className="mb-4">
-        //           <label className="block text-lg font-semibold">Product Name:</label>
-        //           <input
-        //             type="text"
-        //             value={productName}
-        //             onChange={(e) => setProductName(e.target.value)}
-        //             className="w-full border p-2 rounded"
-        //           />
-        //         </div>
-        //         <div className="mb-4">
-        //           <label className="block text-lg font-semibold">Description:</label>
-        //           <textarea
-        //             value={description}
-        //             onChange={(e) => setDescription(e.target.value)}
-        //             className="w-full border p-2 rounded resize-none"
-        //           />
-        //         </div>
-        //         <div>
-        //           <label className="block text-lg font-semibold">Price:</label>
-        //           <input
-        //             type="number"
-        //             value={price}
-        //             onChange={(e) => setPrice(e.target.value)}
-        //             className="w-full border p-2 rounded"
-        //           />
-        //         </div>
-        //       </div>
-
-        //       <div className="w-2/3">
-        //         <h2 className="text-xl font-bold mb-4">Size and Colors</h2>
-        //         {sizeColors.map((sizeColor, index) => (
-        //             <div key={index} className="flex items-center mb-4">
-        //             {/* Size input field */}
-        //             <input
-        //                 type="text"
-        //                 placeholder="Size"
-        //                 value={sizeColor.size}
-        //                 onChange={(e) => handleSizeColorChange(index, 'size', e.target.value)}
-        //                 className="border p-2 rounded mr-2 flex-grow w-16"
-        //             />
-        //             {/* Color inputs and "Remove Color" buttons */}
-        //             <div className="flex flex-wrap">
-        //                 {sizeColor.colors.map((color, colorIndex) => (
-        //                 <div key={colorIndex} className="mr-2">
-        //                     <input
-        //                     type="text"
-        //                     placeholder="Color"
-        //                     value={color}
-        //                     onChange={(e) => handleColorChange(index, colorIndex, e.target.value)}
-        //                     className="border p-2 rounded w-32"
-        //                     />
-        //                     {colorIndex > 0 && (
-        //                     <button
-        //                         type="button"
-        //                         onClick={() => handleRemoveColor(index, colorIndex)}
-        //                         className="text-red-500"
-        //                     >
-        //                         Remove Color
-        //                     </button>
-        //                     )}
-        //                 </div>
-        //                 ))}
-        //                 {/* "Add Color" button */}
-        //                 <button
-        //                 type="button"
-        //                 onClick={() => handleAddColor(index)}
-        //                 className="bg-blue-500 text-white p-2 rounded"
-        //                 >
-        //                 Add Color
-        //                 </button>
-        //             </div>
-        //             {/* "Remove Size" button */}
-        //             <button
-        //                 type="button"
-        //                 onClick={() => removeSizeColor(index)}
-        //                 className="text-red-500 ml-2"
-        //             >
-        //                 Remove Size
-        //             </button>
-        //             </div>
-        //         ))}
-        //         {/* "Add Size and Color" button */}
-        //         <button
-        //             type="button"
-        //             onClick={addSizeColor}
-        //             className="bg-green-500 text-white p-2 rounded w-full mt-4"
-        //         >
-        //             Add Size and Color
-        //         </button>
-        //         </div>
- 
-
-
-                
-        //     </div>
-        //     <div className="flex items-center">
-        //       <label className="block text-lg font-semibold mr-2">Main Image:</label>
-        //       <input type="file" onChange={handleMainImageChange} className="border p-2" />
-        //       {mainImage && (
-        //         <div>
-        //           <img src={URL.createObjectURL(mainImage)} alt="Main Image Preview" className="w-24 h-24 ml-2" />
-        //           <button onClick={removeMainImage} className="text-red-500 ml-2">Remove</button>
-        //         </div>
-        //       )}
-        //     </div>
-        //     <div className="flex items-center">
-        //       <label className="block text-lg font-semibold mr-2">Color Variant Images:</label>
-        //       <input
-        //         type="file"
-        //         multiple
-        //         onChange={handleColorVariantImagesChange}
-        //         className="border p-2"
-        //       />
-        //       {colorVariantImages.length > 0 && (
-        //         <div className="flex flex-wrap ml-2">
-        //           {colorVariantImages.map((image, index) => (
-        //             <div key={index}>
-        //               <img src={URL.createObjectURL(image)} alt={`Color Variant ${index}`} className="w-16 h-16 object-cover mr-2" />
-        //               <button onClick={() => removeColorVariantImage(index)} className="text-red-500">Remove</button>
-        //             </div>
-        //           ))}
-        //         </div>
-        //       )}
-        //     </div>
-        //     <div className="flex items-center">
-        //       <label className="block text-lg font-semibold mr-2">Introductory Images:</label>
-        //       <input
-        //         type="file"
-        //         multiple
-        //         onChange={handleIntroductoryImagesChange}
-        //         className="border p-2"
-        //       />
-        //       {introductoryImages.length > 0 && (
-        //         <div className="flex flex-wrap ml-2">
-        //           {introductoryImages.map((image, index) => (
-        //             <div key={index}>
-        //               <img src={URL.createObjectURL(image)} alt={`Introductory ${index}`} className="w-16 h-16 object-cover mr-2" />
-        //               <button onClick={() => removeIntroductoryImage(index)} className="text-red-500">Remove</button>
-        //             </div>
-        //           ))}
-        //         </div>
-        //       )}
-        //     </div>
-        //     <button type="submit" className="bg-green-500 text-white p-2 rounded w-full">Add Product</button>
-        //   </form>
-        // </div>
-        <>
-        stop
-        </>
-      );
-
-
-
-
+  return (
+    <div className="p-8 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold mb-6">编辑产品</h1>
+      {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">产品名称</label>
+          <input
+            type="text"
+            name="name"
+            value={product.name}
+            onChange={handleInputChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">描述</label>
+          <textarea
+            name="description"
+            value={product.description}
+            onChange={handleInputChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            rows="3"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">价格</label>
+          <input
+            type="number"
+            name="price"
+            value={product.price}
+            onChange={handleInputChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            step="0.01"
+          />
+        </div>
+        <button type="submit" className="bg-green-500 text-white p-2 rounded-md">
+          更新产品
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default EditProduct;

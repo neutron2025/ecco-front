@@ -8,6 +8,7 @@ import { AuthProvider, AuthContext } from './AuthContext';
 import ProductDetail from './ProductDetail';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import RedeemManagement from './RedeemManagement';
+import EditProduct from './EditProduct';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 const imageUrl = process.env.REACT_APP_IMAGE_URL;
@@ -107,7 +108,7 @@ const App = () => {
               next={loadMore}
               hasMore={hasMore}
               loader={<h4 className="text-center py-4">加载中...</h4>}
-              endMessage={<p className="text-center py-4">已加载全部产品</p>}
+              endMessage={<p className="text-center py-4"></p>}
               className="flex flex-wrap mx-2 md:mx-16 p-1 md:px-8"
             >
               {products.map((product) => (
@@ -123,6 +124,7 @@ const App = () => {
             path="/admin/redeem-management"
             element={<RedeemManagement />}
           />
+          <Route path="/admin/edit-product/:id" element={<EditProduct />} />
         </Routes>
       </main>
       <footer className="py-4 bg-gray-100">
